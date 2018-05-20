@@ -1,0 +1,40 @@
+<style>
+	body {
+		margin: 0;
+		padding: 0;
+	}
+	html {
+		margin: 0;
+		padding: 0;
+	}
+</style>
+
+<form id="login" target="frame" method="post" action="https://www.shadowxcraft.net/school/">
+	<input type="hidden" name="username" value="asd" />
+	<input type="hidden" name="password" value="learningstudios" />
+</form>
+
+<iframe id="frame" name="frame" height="100%" width="100%" style="margin: 0; padding: 0; border: 0;"></iframe>
+
+<script type="text/javascript">
+// submit the form into iframe for login into remote site
+document.getElementById('login').submit();
+
+// once you're logged in, change the source url (if needed)
+var iframe = document.getElementById('frame');
+iframe.onload = function() {
+	if (iframe.src != "https://www.shadowxcraft.net/school/") {
+		iframe.src = "https://www.shadowxcraft.net/school/";
+	}
+}
+
+
+window.addEventListener("resize", resizeWindow);
+
+function resizeWindow() {
+	var frame = document.getElementById('frame');
+	frame.width = document.body.clientWidth;
+	frame.height = document.body.clientHeight;
+}
+
+</script>

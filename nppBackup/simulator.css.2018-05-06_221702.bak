@@ -1,0 +1,419 @@
+html, body {
+	padding: 0px;
+	margin: 0px;
+	height: 100%;
+	width: 100%;
+	font-family: "Noto Sans","Roboto",Helvetica,Arial,sans-serif;
+	overflow: hidden;
+	-ms-content-zooming: none;
+	-ms-touch-action: pan-x pan-y;
+	word-wrap: normal;
+	color: #354052;
+}
+
+* {
+	font-size: 2.1vh;
+
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.visible {
+	display: block !important;
+}
+
+button {
+	color: white;
+	border-radius: 0px;
+	
+	box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.7);
+	transition: 0.2s all;
+	padding: 1vh 1.2vh;
+	border: none;
+	margin: 0.7hv;
+	cursor: pointer;
+}
+
+button:hover {
+	
+}
+
+button:active{
+	opacity: 0.8;
+}
+
+.spoiler {
+	padding: 0.2hv;
+}
+
+#projectile-data * {
+	display: inline-block;
+}
+
+#projectile-data > * {
+	padding: 0.1hv;
+	margin: 0.2hv 0.1hv;
+}
+
+/* --------------------------------------------------- */
+/*                      Main area                      */
+/* --------------------------------------------------- */
+
+
+#side-panel {
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Stay on top */
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: auto;
+	-webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+	background-color: #edf2f6;
+}
+
+#side-panel h3 {
+	cursor: pointer;
+}
+
+/* The side navigation menu */
+#panel-content {
+	width: calc(100% - 1.2hv);
+	overflow-x: hidden;
+	overflow-y: hidden;
+	margin: 0;
+	padding: 0 0.6hv;
+}
+
+#position-equation::-webkit-scrollbar {
+	height: 0.5vh;
+	visibility: visible;
+}
+#position-equation::-webkit-scrollbar-track {
+}
+#position-equation::-webkit-scrollbar-thumb {
+	background-color: rgba(255,255,255, 0.7);
+	margin-top: 1px;
+}
+
+#position-equation {
+	overflow-x: scroll;
+}
+
+
+#panel-content h4, #panel-content h3 {
+    margin: 4px 0;
+}
+
+.panel-section {
+	border-bottom: 0.1hv solid #cfd4d8;
+	padding: 2vh;
+	width: 52vh;
+	display: inline-block;
+}
+
+#projectile-data {
+	display: none;
+}
+
+#projectile-launcher {
+	display: none;
+}
+
+#projectile-launcher input {
+	width: calc(33% - 1hv);
+	display: inline-block;
+}
+
+
+#simulator canvas {
+	margin: 0;
+	padding: 0;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+}
+
+@media screen and (orientation: landscape) {
+	/* Wide */
+	#simulator {
+		width: calc(100% - 60vh);
+		height: 100%;
+	}
+	#side-panel {
+		right: 0;
+		top: 0;
+		width: 60vh;
+		height: 100%;
+	}
+	
+	.panel-section {
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
+}
+@media screen and (orientation: portrait) {
+	/* Narrow */
+	#simulator {
+		width: 100%;
+		height: calc(100% - 40vh);
+	}
+	
+	#side-panel {
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 40vh;
+	}
+	
+	.panel-section {
+		overflow-y: hidden;
+		overflow-x: auto;
+	}
+}
+
+#simulator {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	/*height: auto;*/
+	overflow: hidden;
+	margin: 0;
+	transition: filter 0.3s ease-out;
+}
+
+#icons div {
+	display: inline-block;
+	padding: 0px;
+	height: 6vh;
+	vertical-align: middle;
+}
+
+#icons {
+	margin: 0;
+	padding: 0;
+	fill: currentColor; /* For SVG */
+	box-sizing: border-box;
+	background-color: #354052;
+}
+
+#icons > div {
+	padding: 0 0.5hv;
+	width: 5vh;
+	height: 5vh;
+}
+
+#icons > * {
+	cursor: pointer;
+}
+
+#icons div img{
+	border-radius: 100%;
+	height: 80%;
+	padding: 10% 5%;
+	transition: transform 0.15s ease-out;
+	transition: filter 0.05s ease-out;
+}
+
+#icons div img:hover {
+	filter: drop-shadow(0px 0px 0.3hv white);	
+	-webkit-transform: scale(1.1);
+	transform: scale(1.1);
+}
+
+#icons div img:active {
+	-webkit-transform: scale(0.95);
+	transform: scale(0.95);
+	filter: drop-shadow(0px 0px 0.9hv white);
+}
+
+@media (max-width: 700px) {
+	#header-center {
+		display: none;
+	}
+	
+	header > div {
+		width: 48%;
+	}
+}
+
+
+/* --------------------------------------------------- */
+/*                   Overlay popups                    */
+/* --------------------------------------------------- */
+
+.overlay-popup-container {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(50, 50, 50, 0.7);
+	width: 100%;
+	height: 100%;
+	display: none;
+	opacity: 0;
+	transition: opacity 0.15s ease-out; /* Things in the JavaScript code need to be updated for the visuals to be correct*/
+	z-index: 3;
+}
+
+.overlay-popup {
+	position: static;
+	width: 65%;
+	max-height: 70%;
+	min-height: 30%;
+	padding: 0 1%;
+	margin: calc(6vh + 5%) auto;
+	overflow-y: auto;
+}
+
+.popup-header {
+	height: 3.5vh;
+	font-weight: bold;
+	border-bottom: 0.2vh solid white;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	padding-top: 0.2vh;
+	font-size: 2.5vh;
+	white-space: nowrap;
+}
+
+.popup-header div {
+	display: inline-block;
+	margin: 0;
+}
+
+.popup-title {
+	width: calc(94% - 3vh);
+	padding-left: 5%;
+	text-align: center;
+}
+
+.popup-closebutton , .sidepanel-closebutton {
+	width: 3vh;
+	text-align: right;
+	margin: 0;
+}
+
+.popup-closebutton:hover, .sidepanel-closebutton:hover {
+	text-shadow: 1px 1px 10px rgba(255,50,50, 1);
+}
+
+.popup-closebutton:active, .sidepanel-closebuttonactive {
+	color: red;
+}
+
+.setting {
+    /* border: 1px dotted; */
+    /* border-color: white transparent; */
+    padding: 0.5vh;
+    margin: 1vh 0;
+    /*box-shadow: 0px 0px 5px 0px black;*/
+}
+
+.setting * {
+	display: inline-block;
+}
+
+.setting-title {
+	font-weight: bold;
+}
+.setting-title::after {
+	content: ": ";
+}
+
+/* --------------------------------------------------- */
+/*                      Dropdowns                      */
+/* --------------------------------------------------- */
+
+.dropdown {
+	position: absolute;
+	display: none;
+	width: 35vh;
+	z-index: 15;
+	margin-top: 0px;
+	opacity: 0;
+	transition: all 0.2s ease-out;
+}
+
+.dropdown h2 {
+	margin: 0;
+}
+
+.dropdown-arrow {
+	content: "";
+	border-width: 1.5vh;
+	border-style: solid;
+	border-color: transparent transparent #106180 transparent;
+	position: absolute;
+	top: -3vh;
+	left: 2vh;
+}
+
+.dropdown-visible {
+	display: block;
+	opacity: 1;
+	margin-top: 1vh;
+}
+
+.dropdown-content > div {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.dropdown-content img {
+	max-width: 100%;
+	height: 100%;
+	display: block;
+}
+
+.dropdown-content > div:nth-child(1) {
+	width: 30%;
+}
+.dropdown-content > div:nth-child(2) {
+	padding: 1vh 0;
+	width: calc(74% - 2vh);
+}
+
+#login-register div {
+	vertical-align: middle;
+}
+
+#login-inputs {
+	display: inline-block;
+	width: 70%;
+}
+#login-inputs input {
+	width: calc(100% - 0.5vh);
+}
+#login-submit {
+	display: inline-block;
+	width: 27%;
+}
+#login-submit button {
+	margin: 0.1vh;
+	width: calc(100% - 0.8vh);
+	padding: 0.1vh 0.3vh;
+}
+
+#login-details {
+	color: red;
+}
+
+#profile > * {
+	display: inline-block;
+}
+
+#profile > .when-logged-in, .when-logged-in {
+	display: none;
+} 
+
+/* --------------------------------------------------- */
+/*             Both Dropdowns and popups               */
+/* --------------------------------------------------- */
+

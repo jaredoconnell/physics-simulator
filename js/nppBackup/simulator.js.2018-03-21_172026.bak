@@ -1,0 +1,2157 @@
+// Designed by Jared O'Connell
+// Can be viewed online at https://www.shadowxcraft.net/school/ username: asd, password: learningstudios
+
+var scene, sceneHUD, camera, cameraHUD, renderer, simulator, octree;
+var cube;
+var particleSystem, particleOptions;
+
+var pitchObject, yawObject; // For camera angle
+var PI_2 = Math.PI / 2;
+
+// For physics
+var collisionConfiguration, dispatcher, broadphase, solver, physicsWorld, transformAux1;
+
+// For the world
+var world;
+
+function init() {
+	HUDText = "Loading..";
+	
+	setPositionEquation();
+	
+	simulator = document.getElementById("simulator");
+	scene = new THREE.Scene();
+	
+	initPhysics();
+	
+	// camera
+	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 5e5);
+	initializeCamera();
+	
+	// Renderer
+	renderer = new THREE.WebGLRenderer({canvas: document.getElementById("simulator-canvas")});
+	renderer.setClearColor(0x5c98f9);
+	resizeRenderer();
+	renderer.autoClear = false; // Needed for the two things rendering.
+	// Shadows
+	renderer.shadowMap.enabled = true;
+	renderer.shadowMapSoft = true;
+
+	renderer.shadowCameraNear = 3;
+	renderer.shadowCameraFar = camera.far;
+	renderer.shadowCameraFov = 50;
+
+	renderer.shadowMapBias = 0.0039;
+	renderer.shadowMapDarkness = 0.5;
+
+	initializeOctree();
+	
+	loadSettings();
+	
+	// Lights
+	//var sunLight = new THREE.SpotLight(0xFFE8D4, 1.5, 200, PI_2, 0.5, 1);
+	var sunLight = new THREE.DirectionalLight(0xFFE8D4, 1.5);
+	var ambLight = new THREE.AmbientLight( 0xc9d1ff, 0.3);
+
+	var cameraHelper = new THREE.CameraHelper( sunLight.shadow.camera )
+	
+	// set its position
+	sunLight.position.x = 0;
+	sunLight.position.y = 70;
+	sunLight.position.z = 0;
+	sunLight.castShadow = true;
+	sunLight.distance = 20;
+	//sunLight.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(60, 1, 1, 2500));
+	sunLight.shadow.mapSize.width = 2048;
+	sunLight.shadow.mapSize.height = 2048;
+	
+	sunLight.shadow.camera.left = -20;
+	sunLight.shadow.camera.right = 20;
+	sunLight.shadow.camera.top = 20;
+	sunLight.shadow.camera.bottom = -20;
+	sunLight.shadow.camera.zoom = 0.1;
+	sunLight.shadow.camera.updateProjectionMatrix();
+	
+	// add to the scene
+	scene.add(sunLight);
+	scene.add(ambLight);
+	scene.add(cameraHelper);
+	
+	
+	//loadThreeWorld();
+	world = new World(`{
+    "0":{
+        "0":{
+            "yValue":0
+        },
+        "1":{
+            "yValue":0
+        },
+        "2":{
+            "yValue":0
+        },
+        "3":{
+            "yValue":0
+        },
+        "4":{
+            "yValue":0
+        },
+        "zValues":[
+            -1,
+            -4,
+            -5,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "-5":{
+            "yValue":0
+        },
+        "-4":{
+            "yValue":1,
+			"connectedX":-3
+        },
+        "-1":{
+            "yValue":0,
+            "connectedZ":-4
+        }
+    },
+    "1":{
+        "0":{
+            "yValue":0
+        },
+        "1":{
+            "yValue":0
+        },
+        "2":{
+            "yValue":0
+        },
+        "3":{
+            "yValue":0
+        },
+        "4":{
+            "yValue":0
+        },
+        "zValues":[
+            -1,
+            -2,
+            -3,
+            -4,
+            -5,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "-5":{
+            "yValue":0
+        },
+        "-4":{
+            "yValue":0
+        },
+        "-3":{
+            "yValue":0
+        },
+        "-2":{
+            "yValue":0
+        },
+        "-1":{
+            "yValue":0
+        }
+    },
+    "2":{
+        "0":{
+            "yValue":0
+        },
+        "1":{
+            "yValue":0
+        },
+        "2":{
+            "yValue":0
+        },
+        "3":{
+            "yValue":0
+        },
+        "4":{
+            "yValue":0
+        },
+        "zValues":[
+            -1,
+            -2,
+            -3,
+            -4,
+            -5,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "-5":{
+            "yValue":0
+        },
+        "-4":{
+            "yValue":0
+        },
+        "-3":{
+            "yValue":0
+        },
+        "-2":{
+            "yValue":0
+        },
+        "-1":{
+            "yValue":0
+        }
+    },
+    "3":{
+        "0":{
+            "yValue":0
+        },
+        "1":{
+            "yValue":0
+        },
+        "2":{
+            "yValue":0
+        },
+        "3":{
+            "yValue":0
+        },
+        "4":{
+            "yValue":0
+        },
+        "zValues":[
+            -1,
+            -2,
+            -3,
+            -4,
+            -5,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "-5":{
+            "yValue":0
+        },
+        "-4":{
+            "yValue":0
+        },
+        "-3":{
+            "yValue":0
+        },
+        "-2":{
+            "yValue":0
+        },
+        "-1":{
+            "yValue":0
+        }
+    },
+    "4":{
+        "0":{
+            "yValue":0
+        },
+        "1":{
+            "yValue":0
+        },
+        "2":{
+            "yValue":0
+        },
+        "3":{
+            "yValue":0
+        },
+        "4":{
+            "yValue":0
+        },
+        "zValues":[
+            -1,
+            -2,
+            -3,
+            -4,
+            -5,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "-5":{
+            "yValue":0
+        },
+        "-4":{
+            "yValue":0
+        },
+        "-3":{
+            "yValue":0
+        },
+        "-2":{
+            "yValue":0
+        },
+        "-1":{
+            "yValue":0
+        }
+    },
+    "xValues":[
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+        0,
+        1,
+        2,
+        3,
+        4
+    ],
+    "-5":{
+        "0":{
+            "yValue":0
+        },
+        "1":{
+            "yValue":0
+        },
+        "2":{
+            "yValue":0
+        },
+        "3":{
+            "yValue":0
+        },
+        "4":{
+            "yValue":0
+        },
+        "zValues":[
+            -1,
+            -2,
+            -3,
+            -4,
+            -5,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "-5":{
+            "yValue":0
+        },
+        "-4":{
+            "yValue":0
+        },
+        "-3":{
+            "yValue":0
+        },
+        "-2":{
+            "yValue":0
+        },
+        "-1":{
+            "yValue":0
+        }
+    },
+    "-4":{
+        "0":{
+            "yValue":0
+        },
+        "1":{
+            "yValue":0
+        },
+        "2":{
+            "yValue":0
+        },
+        "3":{
+            "yValue":0
+        },
+        "4":{
+            "yValue":0
+        },
+        "zValues":[
+            -1,
+            -2,
+            -3,
+            -4,
+            -5,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "-5":{
+            "yValue":0
+        },
+        "-4":{
+            "yValue":0
+        },
+        "-3":{
+            "yValue":0
+        },
+        "-2":{
+            "yValue":0
+        },
+        "-1":{
+            "yValue":0
+        }
+    },
+    "-3":{
+        "0":{
+            "yValue":0
+        },
+        "1":{
+            "yValue":0
+        },
+        "2":{
+            "yValue":0
+        },
+        "3":{
+            "yValue":0
+        },
+        "4":{
+            "yValue":0
+        },
+        "zValues":[
+            -1,
+            -2,
+            -3,
+            -4,
+            -5,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "-5":{
+            "yValue":0
+        },
+        "-4":{
+            "yValue":0
+        },
+        "-3":{
+            "yValue":0
+        },
+        "-2":{
+            "yValue":0
+        },
+        "-1":{
+            "yValue":0
+        }
+    },
+    "-2":{
+        "0":{
+            "yValue":0
+        },
+        "1":{
+            "yValue":0
+        },
+        "2":{
+            "yValue":0
+        },
+        "3":{
+            "yValue":0
+        },
+        "4":{
+            "yValue":0
+        },
+        "zValues":[
+            -1,
+            -2,
+            -3,
+            -4,
+            -5,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "-5":{
+            "yValue":0
+        },
+        "-4":{
+            "yValue":0
+        },
+        "-3":{
+            "yValue":0
+        },
+        "-2":{
+            "yValue":0
+        },
+        "-1":{
+            "yValue":0
+        }
+    },
+    "-1":{
+        "0":{
+            "yValue":0
+        },
+        "1":{
+            "yValue":0
+        },
+        "2":{
+            "yValue":0
+        },
+        "3":{
+            "yValue":0
+        },
+        "4":{
+            "yValue":0
+        },
+        "zValues":[
+            -1,
+            -2,
+            -3,
+            -4,
+            -5,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "-5":{
+            "yValue":0
+        },
+        "-4":{
+            "yValue":0
+        },
+        "-3":{
+            "yValue":0
+        },
+        "-2":{
+            "yValue":0
+        },
+        "-1":{
+            "yValue":0
+        }
+    }
+}`);
+	scene.add(world.mesh);
+	
+	loadSky();
+	HUDText = "";
+	
+	initializeHUD();
+	initializeControls();
+	
+	visualizationManager = new VisualizationManager();
+
+	startLoop();
+	loadFPSStats();
+	loadLatex();
+}
+
+function initPhysics() {
+	Ammo();
+	// Physics engine
+	collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
+	dispatcher = new Ammo.btCollisionDispatcher( collisionConfiguration );
+	broadphase = new Ammo.btDbvtBroadphase();
+	solver = new Ammo.btSequentialImpulseConstraintSolver();
+	physicsWorld = new Ammo.btDiscreteDynamicsWorld( dispatcher, broadphase, solver, collisionConfiguration );
+	physicsWorld.setGravity( new Ammo.btVector3( 0, -9.81, 0 ) );
+	transformAux1 = new Ammo.btTransform()
+}
+
+// Latex, for the formatted equations. 
+function loadLatex() {
+	var elements = document.getElementsByClassName("render-latex");
+	var length = elements.length;
+	for(var i = 0; i < length; i++) {
+		katex.render(elements[i].innerHTML, elements[i], {throwOnError: false});
+	}
+}
+
+// Octree, for efficient projectile retrieval.
+function initializeOctree() {
+	octree = new THREE.Octree({
+		radius: 40, // optional, default = 1, octree will grow and shrink as needed
+		undeferred: false, // optional, default = false, octree will defer insertion until you call octree.update();
+		depthMax: Infinity, // optional, default = Infinity, infinite depth
+		objectsThreshold: 8, // optional, default = 8
+		overlapPct: 0.15, // optional, default = 0.15 (15%), this helps sort objects that overlap nodes
+		//scene: scene // optional, pass scene as parameter only if you wish to visualize octree
+	} );
+}
+
+function loadSky() {
+	sky = new THREE.Sky();
+	sky.scale.setScalar( 450000 );
+	// add it to the scene
+	scene.add( sky );
+	
+	
+
+	console.log("Sky added");
+	updateSky();
+}
+
+var distance = 400000;
+
+function updateSky() {
+	var uniforms = sky.material.uniforms;
+	uniforms.turbidity.value = 9;
+	uniforms.rayleigh.value = 2;
+	uniforms.luminance.value = 1.05;
+	uniforms.mieCoefficient.value = 0.004;
+	uniforms.mieDirectionalG.value = 0.8;
+	var theta = Math.PI * ( 0 - 0.5 );
+	var phi = 2 * Math.PI * ( 0.24 - 0.5 );
+	var position = new THREE.Vector3();
+	position.x = distance * Math.cos( phi );
+	position.y = distance * Math.sin( phi ) * Math.sin( theta );
+	position.z = distance * Math.sin( phi ) * Math.cos( theta );
+	uniforms.sunPosition.value.copy( position );
+	uniforms.ambientLightColor = 0x3f7b9d;
+
+}
+
+function loadThreeWorld() {	
+	var loader = new THREE.TextureLoader();
+	loader.load('images/sandy.jpg', function ( texture ) {
+		var quality = 16;
+		var geometry = new THREE.PlaneGeometry( 100, 100, quality - 1, quality - 1 );
+		for (var i = 0, l = geometry.vertices.length; i < l; i++ ) {
+			geometry.vertices[ i ].z -= Math.floor(i / 40) * 10;
+		}
+		
+		for (var i = 0; i < geometry.faces.length; i++) {
+			geometry.faces[i].color.setHex(Math.floor(Math.random() * (0xFFFFFF + 1)));
+		}
+		
+		
+		var material = new THREE.MeshPhongMaterial();
+		material.transparent = false;
+		material.vertexColors = THREE.FaceColors;
+		//var material = new THREE.MeshPhongMaterial({map: texture, overdraw: 0.5, shininess: 10});
+		//var material = new THREE.MeshNormalMaterial();
+		//material.fog = false;
+		//material.lights = false;
+		geometry.computeVertexNormals();
+		floor = new THREE.Mesh(geometry, material);
+		floor.position.y = 0;
+		floor.material.side = THREE.DoubleSide;
+		floor.rotation.z = Math.PI / 2;
+		floor.rotation.x = Math.PI / 2;
+		floor.receiveShadow = true;
+		scene.add(floor);
+		
+		// Physics representation
+		
+		/*groundShape = createTerrainShape( heightData );
+		var groundTransform = new Ammo.btTransform();
+		groundTransform.setIdentity();
+		// Shifts the terrain, since bullet re-centers it on its bounding box.
+		groundTransform.setOrigin( new Ammo.btVector3( 0, ( terrainMaxHeight + terrainMinHeight ) / 2, 0 ) );
+		var groundMass = 0;
+		var groundLocalInertia = new Ammo.btVector3( 0, 0, 0 );
+		var groundMotionState = new Ammo.btDefaultMotionState( groundTransform );
+		var groundBody = new Ammo.btRigidBody( new Ammo.btRigidBodyConstructionInfo( groundMass, groundMotionState, groundShape, groundLocalInertia ) );
+		physicsWorld.addRigidBody( groundBody );*/
+		
+	});
+}
+
+function initializeCamera() {
+	camera.rotation.set( 0, 0, 0 );
+
+	pitchObject = new THREE.Object3D();
+	pitchObject.add( camera );
+
+	yawObject = new THREE.Object3D();
+	yawObject.position.y = 1.8;
+	yawObject.add( pitchObject );
+	
+	//yawObject.translateY();
+	yawObject.translateZ(5);
+	
+	scene.add(yawObject);
+}
+
+// For when the user resizes the window (or changes orientation)
+function resizeRenderer() {
+	// Canvas resolution
+	renderer.setSize(simulator.clientWidth, simulator.clientHeight);
+	renderer.setPixelRatio(resolutionScaleOfCanvas);
+
+	camera.aspect = simulator.clientWidth / simulator.clientHeight;
+	camera.updateProjectionMatrix();
+	
+	if(hudCanvas !== undefined) {
+		hudCanvas.width = simulator.clientWidth;
+		hudCanvas.height = simulator.clientHeight;
+		
+		calculateHUDPositions();
+	}
+	controlsChanged = true;
+}
+
+var lastRealTime = Date.now(), time = 0, timeRate = 1;
+var joggingAngle = 0;
+var frameIndex = 0;
+
+function animateThree() {
+	if(renderer != null) {
+		var timeNow = Date.now();
+		
+		var elapsed = timeNow - lastRealTime;
+		elapsed = Math.min(1000, elapsed) / 1000; // Converts to seconds
+		
+		time += elapsed * timeRate;
+		
+		if(elapsed * timeRate !== 0) {
+			physicsWorld.stepSimulation( (elapsed * timeRate), 10 );
+			
+			// The actual physics update.
+			var length = projectiles.length;
+			for(var i = 0; i < length; i++) {
+				projectiles[i].update(time, elapsed * timeRate, collided, false);
+			}
+			
+			// To keep it up to date after all of the updates.
+			octree.rebuild();
+	
+			// Updates the panel on the user interface that displays projectile details.
+			if(physicsPanel)
+				physicsPanel.update(Date.now() - timeNow, 30);
+		}
+		
+		var selectedProjectile = visualizationManager.getSelectedProjectile();
+		if(lookAtSelected && selectedProjectile) {
+			// Uses math to look at the projectile
+			var dx = selectedProjectile.mesh.position.x - yawObject.position.x;
+			var dy = selectedProjectile.mesh.position.y - yawObject.position.y;
+			var dz = selectedProjectile.mesh.position.z - yawObject.position.z;
+			var xzd = Math.sqrt(dx * dx + dz * dz);
+
+			yawObject.rotation.y = -Math.atan2(dz, dx) - PI_2;
+			pitchObject.rotation.x = PI_2 - Math.atan2(xzd, dy);
+		} else if(yawRate != 0 || pitchRate != 0) {
+			// Move based on player controls.
+			yawObject.rotation.y += yawRate * elapsed;
+			pitchObject.rotation.x += pitchRate * elapsed;
+
+			pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
+		}
+		
+		if(lookAtSelected && selectedProjectile) {
+			// Makes the object slowly go towards the ball when too far
+			var distance = yawObject.position.distanceTo(selectedProjectile.getPosition());
+			var percentageSlowed = 1.6;
+			if(distance > maxDistance) {
+				var selectedVelocity = selectedProjectile.getVelocity();
+				var lineBetween = selectedProjectile.getPosition().clone().sub(yawObject.position).normalize();
+				
+				var factor = Math.max(selectedVelocity.dot(lineBetween.clone().normalize()), 0.1);
+				
+				if(distance < maxDistance * percentageSlowed) {
+					factor*= ((distance - maxDistance) * percentageSlowed * 2 / maxDistance);
+				}
+
+				yawObject.position.add(lineBetween.multiplyScalar(factor * elapsed * timeRate));
+			}
+		}
+		
+		updateControls(elapsed);
+		
+		var collided = [];
+		
+		if(visualizationManager !== undefined)
+			visualizationManager.update(elapsed * timeRate);
+
+		if(particleSystem !== undefined) {
+			particleSystem.update(time);
+		}
+		
+		lastRealTime = timeNow;
+	
+
+		renderer.render( scene, camera );
+		updateHUD();
+	}
+}
+
+function sortNumber(a,b) {
+    return a - b;
+}
+
+var defaultSize = 10;
+function World(oldJSON) {
+	
+	// Creates or reads the basic outline of the world ground
+	if(oldJSON && oldJSON != "") {
+		// Use the old one
+		this.data = JSON.parse(oldJSON);
+	} else {
+		
+		this.data = new Object();
+		this.data.xValues = [];
+		// Construct a new one
+		for(let x = -Math.floor(defaultSize / 2); x < Math.ceil(defaultSize / 2); x++ ) {
+			// Let it know about the new x-value
+			this.data.xValues.push(x);
+			let zData = new Object();
+			this.data[x] = zData;
+			zData.zValues = [];
+			
+			for(let z = -Math.floor(defaultSize / 2); z < Math.ceil(defaultSize / 2); z++) {
+				zData.zValues.push(z);
+				
+				let tileObject = new Object();
+				tileObject.yValue = 0;
+				
+				zData[z] = tileObject;
+			}
+		}
+	}
+	
+	this.vertexMap = new Object(); // Maps tile objects to vertex and faces.
+	this.geometry = new THREE.Geometry();
+	var faceIndex = 0;
+	
+	// Implements it in Three.js
+	// In this algorithm, it adds extra faces BEHIND it.
+	// The only case where it does not add anything is when two adjacent faces are at the same height.
+	// If the adjacent faces are not at the same height, it adds a gray vertical wall.
+	// If the platform is attached to another, it creates a sl
+	if (this.data && this.data.xValues) {
+		this.data.xValues.sort(sortNumber);
+		for(let x of this.data.xValues) {
+			let xRowOfZData = this.data[x];
+			let xRowOfZVertexData = new Object();
+			this.vertexMap[x] = xRowOfZVertexData;
+			
+			if(xRowOfZData && xRowOfZData.zValues) {
+				xRowOfZData.zValues.sort(sortNumber);
+				for(let z of xRowOfZData.zValues) {
+					let tileObject = xRowOfZData[z];
+					if(tileObject) {
+						let y = tileObject.yValue;
+						xRowOfZVertexData[z] = new VertexData(x, y, z, tileObject, this);					
+					}
+				}
+			}
+		}
+	}
+	
+	this.geometry.computeFaceNormals();
+	//this.geometry.computeVertexNormals();
+	
+	var material = new THREE.MeshPhongMaterial();
+	material.transparent = false;
+	material.vertexColors = THREE.FaceColors;
+	
+	this.mesh = new THREE.Mesh(this.geometry, material);
+	this.mesh.material.side = THREE.DoubleSide;
+	this.mesh.receiveShadow = true;
+}
+
+let black = new THREE.Color(0);
+
+function VertexData(x, y, z, tileObject, world) {
+	let numVerticies = world.geometry.vertices.length;
+	this.topLeftVertex = numVerticies;
+	this.topLeft = new THREE.Vector3(x, y, z);
+	this.topRightVertex = numVerticies + 1;
+	this.topRight = new THREE.Vector3(x + 1, y, z);
+	this.bottomLeftVertex = numVerticies + 2;
+	this.bottomLeft = new THREE.Vector3(x, y, z + 1);
+	this.bottomRightVertex = numVerticies + 3;
+	this.bottomRight = new THREE.Vector3(x + 1, y, z + 1);
+	
+	world.geometry.vertices.push(this.topLeft);
+	world.geometry.vertices.push(this.topRight);
+	world.geometry.vertices.push(this.bottomLeft);
+	world.geometry.vertices.push(this.bottomRight);
+							
+	let color = new THREE.Color(Math.floor(Math.random() * (0xFFFFFF + 1)));
+	
+	// Both triangles to make the square
+	let face1 = new THREE.Face3( this.topLeftVertex, this.topRightVertex, this.bottomLeftVertex);
+	let face2 = new THREE.Face3( this.bottomLeftVertex, this.topRightVertex, this.bottomRightVertex);
+	face1.color = color;
+	face2.color = color;
+	
+	world.geometry.faces.push(face1);
+	world.geometry.faces.push(face2);
+	
+	let connectedX = tileObject.connectedX;
+	let connectedZ = tileObject.connectedZ;
+	
+	if(connectedX && connectedX < x) {
+		let remoteTile = world.vertexMap[connectedX][z];
+		if(remoteTile) {
+			//let angleFace1 = new THREE.Face3( this.topLeftVertex, remoteTile.bottomRightVertex, remoteTile.topRightVertex);
+			let angleFace2 = new THREE.Face3( remoteTile.bottomRightVertex, this.topLeftVertex, this.bottomLeftVertex);
+			//angleFace1.color = black;
+			angleFace2.color = black;
+			//world.geometry.faces.push(angleFace1);
+			world.geometry.faces.push(angleFace2);
+		}
+	}
+
+	if(connectedZ && connectedZ < z) {
+		let remoteTile = world.vertexMap[x][connectedZ];
+		if(remoteTile) {
+			let angleFace1 = new THREE.Face3( this.topLeftVertex, remoteTile.bottomRightVertex, remoteTile.bottomLeftVertex);
+			let angleFace2 = new THREE.Face3( remoteTile.bottomRightVertex, this.topLeftVertex, this.topRightVertex);
+			angleFace1.color = black;
+			angleFace2.color = black;
+			world.geometry.faces.push(angleFace1);
+			world.geometry.faces.push(angleFace2);
+		} else {
+			console.log("Cannot find connected tile " + x + ", " + connectedZ);
+		}
+	}
+	console.log("Loaded " + x + ", " + z);
+}
+
+/*
+ * Converts an HSL color value to RGB. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes h, s, and l are contained in the set [0, 1] and
+ * returns r, g, and b in the set [0, 255].
+ *
+ * @param   {number}  h       The hue
+ * @param   {number}  s       The saturation
+ * @param   {number}  l       The lightness
+ * @return  {Array}           The RGB representation
+ */
+function hslToRgb(h, s, l){
+    var r, g, b;
+
+    if(s == 0){
+        r = g = b = l; // achromatic
+    }else{
+        var hue2rgb = function hue2rgb(p, q, t){
+            if(t < 0) t += 1;
+            if(t > 1) t -= 1;
+            if(t < 1/6) return p + (q - p) * 6 * t;
+            if(t < 1/2) return q;
+            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+function updateControls(elapsed) {
+			// Controls
+	if(forwardSpeed !== 0) {
+		yawObject.translateZ(- forwardSpeed * elapsed);
+	}
+	if(sideSpeed !== 0) {
+		yawObject.translateX(sideSpeed * elapsed);
+	}
+	
+	if(forwardSpeed !== 0 || sideSpeed !== 0) {
+		joggingAngle += elapsed * 600;  // "fiddle factor"
+		yawObject.translateY(Math.sin(degToRad(joggingAngle))/ 100);
+	}
+	if(verticalSpeed !== 0) {
+		yawObject.translateY(verticalSpeed * elapsed);
+	}
+
+}
+
+function toggleTime() {
+	if(timeRate == 0) {
+		timeRate = 1;
+	} else {
+		timeRate = 0;
+	}
+}
+
+function slowTimeToggle() {
+	if(timeRate == 1 || timeRate < 0) {
+		timeRate = 0.1;
+	} else {
+		timeRate = -0.1;
+	}
+}
+
+function degToRad(degrees) {
+	return degrees * Math.PI / 180;
+}
+
+// -------------------------------------------------------- //
+// -------------------------- HUD ------------------------- //
+// -------------------------------------------------------- //
+var HUDText = null;
+var hudCanvas, controlsChanged = false;
+
+function initializeHUD() {
+	
+	// HUD will be a 2d canvas.
+	hudCanvas = document.getElementById('hud-canvas');
+	
+	// Oversampling for better quality.
+	hudCanvas.width = simulator.clientWidth;
+	hudCanvas.height = simulator.clientHeight;
+	
+	hudContext = hudCanvas.getContext('2d');
+	hudContext.shadowColor = "black";
+	hudContext.textAlign = 'center';
+	
+	calculateHUDPositions();
+}
+
+function calculateHUDPositions() {
+	posTouchCenter = new THREE.Vector2(simulator.clientWidth / 6, simulator.clientHeight * 11 / 16);
+	dirTouchCenter = new THREE.Vector2(simulator.clientWidth * (5 / 6), simulator.clientHeight * (11 / 16));
+	vertTouchCenter = new THREE.Vector2(simulator.clientWidth * (1/2), simulator.clientHeight * (11 / 16));
+	maxTouchDistance = Math.min(simulator.clientWidth / 7, simulator.clientHeight / 6);
+	controlsChanged = true;
+}
+
+function updateHUD() {
+	if(HUDText !== null) {
+		console.log(HUDText);
+		hudContext.clearRect(0, 0, hudCanvas.width, hudCanvas.height/3);
+		
+		hudContext.font = "Normal " + (hudCanvas.height / 6) + "px Arial"; // TODO: Handle on resize
+		hudContext.fillStyle = "white";
+		hudContext.shadowBlur = 8;
+		hudContext.shadowOffsetX = 3; 
+		hudContext.shadowOffsetY = 3; 
+
+		hudContext.fillText(HUDText, hudCanvas.width / 2, hudCanvas.height/4, hudCanvas.width);
+		HUDText = null;
+		
+		hudContext.shadowOffsetX = 0;
+		hudContext.shadowOffsetY = 0;
+		hudContext.shadowBlur = 0;
+		hudContext.shadowColor = "rgba(0,0,0,0)"
+	}
+	
+	if(controlsChanged) {
+		https://www.w3schools.com/tags/canvas_drawimage.asp
+		
+		
+		hudContext.clearRect(0, hudCanvas.height/3, hudCanvas.width, hudCanvas.height * 2 / 3);
+		if(isTouch) {
+			drawCircle(posTouchCenter, "rgba(0, 180, 0, 0.3)", maxTouchDistance, 2);
+			drawCircle(dirTouchCenter, "rgba(0, 180, 0, 0.3)", maxTouchDistance, 2);
+			
+			// The line that signifies vertical movement.
+			hudContext.beginPath();
+			hudContext.moveTo(vertTouchCenter.x, vertTouchCenter.y - maxTouchDistance);
+			hudContext.lineTo(vertTouchCenter.x, vertTouchCenter.y + maxTouchDistance);
+			hudContext.stroke();
+		}
+		
+		if(positionTouch) {
+			console.log(positionTouch);
+			var currentTouchPos = new THREE.Vector2(positionTouch.clientX, positionTouch.clientY).sub(posTouchCenter);
+			var dist = Math.min(currentTouchPos.length(), maxTouchDistance);
+			currentTouchPos.normalize().multiplyScalar(dist);
+			currentTouchPos.add(posTouchCenter);
+			
+			drawCircle(currentTouchPos, "rgba(0, 255, 0, 1)", 40, 10);
+			
+			hudContext.beginPath();
+			hudContext.moveTo(posTouchCenter.x, posTouchCenter.y);
+			hudContext.lineTo(currentTouchPos.x, currentTouchPos.y);
+			hudContext.stroke();
+		}
+		if(directionTouch) {
+			var currentTouchPos = new THREE.Vector2(directionTouch.clientX, directionTouch.clientY - hudCanvas.offsetTop).sub(dirTouchCenter);
+			var dist = Math.min(currentTouchPos.length(), maxTouchDistance);
+			currentTouchPos.normalize().multiplyScalar(dist);
+			currentTouchPos.add(dirTouchCenter);
+
+			drawCircle(currentTouchPos, "rgba(0, 255, 0, 1)", 40, 10);
+
+			hudContext.beginPath();
+			hudContext.moveTo(dirTouchCenter.x, dirTouchCenter.y);
+			hudContext.lineTo(currentTouchPos.x, currentTouchPos.y);
+			hudContext.stroke();
+		}
+		if(vertTouch) {
+			var currentTouchPos = new THREE.Vector2(vertTouchCenter.x, vertTouch.clientY - hudCanvas.offsetTop).sub(vertTouchCenter);
+			
+			var dist = Math.min(currentTouchPos.length(), maxTouchDistance);
+			currentTouchPos.normalize().multiplyScalar(dist);
+			currentTouchPos.add(vertTouchCenter);
+			
+			drawCircle(currentTouchPos, "rgba(0, 255, 0, 1)", 40, 10);
+		}
+		
+		controlsChanged = false;
+	}
+
+}
+
+// -------------------------------------------------------- //
+// ----------------------- CONTROLS ----------------------- //
+// -------------------------------------------------------- //
+var currentlyPressedKeys = {}; // An object that stores currently pressed keys
+
+var positionTouch, directionTouch, vertTouch, mousePosition = new THREE.Vector2();
+var posTouchCenter, dirTouchCenter, vertTouchCenter, maxTouchDistance;
+
+var isTouch = false;
+var switchedToFullScreen = false;
+
+var lookAtSelected = true;
+var maxDistance = 30; // meters
+
+var touchControls;
+var keyboardControls;
+
+var raycaster = new THREE.Raycaster();
+
+// You need to initialize the HUD first.
+function initializeControls() {
+	document.onkeydown = handleKeyDown;
+	document.onkeyup = handleKeyUp;
+	
+	document.body.addEventListener("touchstart", handleStart, false);
+	document.body.addEventListener("touchend", handleEnd, false);
+	document.body.addEventListener("touchcancel", handleEnd, false);
+	document.body.addEventListener("touchmove", handleMove, { passive: false });
+
+	document.body.addEventListener("click", handleClick, false);
+	document.body.addEventListener("fullscreenchange", resizeRenderer, false);
+}
+
+function handleClick(event) {
+	if(event.target.nodeName === "CANVAS") {
+		event.preventDefault();
+		var target = event.target;
+		
+		// Gets the positions relative to the center, with a range of -1 to 1
+		mousePosition.x = ( (event.clientX - target.offsetLeft) / target.clientWidth ) * 2 - 1;
+		mousePosition.y = - ( (event.clientY - target.offsetTop) / target.clientHeight ) * 2 + 1;
+		
+		raycaster.setFromCamera( mousePosition, camera );
+		
+		octreeObjects = octree.search( raycaster.ray.origin, raycaster.ray.far, true, raycaster.ray.direction );
+		intersections = raycaster.intersectOctreeObjects( octreeObjects );
+		
+		if(intersections.length > 0) {
+			console.log("Found intersection");
+			var projectile = projectilesByID[intersections[0].object.uuid];
+			if(visualizationManager !== null) {
+				if(projectile !== null ) {
+					visualizationManager.selectProjectile(projectile);
+				} else {
+					visualizationManager.deselectProjectile();
+				}
+			}
+		} else if(visualizationManager !== null) {
+			visualizationManager.deselectProjectile();
+		}
+	}
+}
+
+function handleStart(e) {
+	if(!isTouch) {
+		isTouch = true;
+		controlsChanged = true;
+	}
+	
+	var touches = e.changedTouches;
+	var length = touches.length;
+	for (var i = 0; i < length; i++) {
+		var touchPosition = new THREE.Vector2(touches[i].clientX, touches[i].clientY - hudCanvas.offsetTop);
+		if(positionTouch === undefined && touchPosition.distanceTo(posTouchCenter) <= maxTouchDistance) {
+			positionTouch = touches[i];
+			controlsChanged = true;
+		} else if (directionTouch === undefined && touchPosition.distanceTo(dirTouchCenter) <= maxTouchDistance) {
+			directionTouch = touches[i];
+			controlsChanged = true;
+		} else if (vertTouch === undefined && touchPosition.distanceTo(vertTouchCenter) <= maxTouchDistance) {
+			vertTouch = touches[i];
+			controlsChanged = true;
+		}
+	}
+}
+
+function handleEnd(e) {	
+	var touches = e.changedTouches;
+	var length = touches.length;
+	for (var i = 0; i < length; i++) {
+		if(positionTouch && touches[i].identifier === positionTouch.identifier) {
+			positionTouch = undefined;
+			controlsChanged = true;
+		} else if (directionTouch && touches[i].identifier === directionTouch.identifier) {
+			directionTouch = undefined;
+			controlsChanged = true;
+		} else if (vertTouch && touches[i].identifier === vertTouch.identifier) {
+			vertTouch = undefined;
+			controlsChanged = true;
+		}
+	}
+}
+
+function handleMove(e) {
+	var touches = e.changedTouches;
+	var length = touches.length;
+	for (var i = 0; i < length; i++) {
+		if(positionTouch && touches[i].identifier === positionTouch.identifier) {
+			positionTouch = touches[i];
+			controlsChanged = true;
+		} else if(directionTouch && touches[i].identifier === directionTouch.identifier) {
+			directionTouch = touches[i]; 
+			controlsChanged = true;
+		} else if(vertTouch && touches[i].identifier === vertTouch.identifier) {
+			vertTouch = touches[i]; 
+			controlsChanged = true;
+		}
+	}
+	e.preventDefault();
+}
+
+function drawCircle(position, style, radius, strokeWidth) {
+	hudContext.beginPath();
+	hudContext.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
+	hudContext.lineWidth = strokeWidth;
+	hudContext.strokeStyle = style;
+	hudContext.stroke();
+}
+
+// Keys
+function handleKeyDown(event) {
+	if(event.target == document.body && !currentlyPressedKeys[event.keyCode] && !event.ctrlKey) {
+		currentlyPressedKeys[event.keyCode] = Date.now();
+		if(currentlyPressedKeys[76]) { // l
+			visualizationManager.launchProjectile();
+		} else if (currentlyPressedKeys[79]) { // o
+			visualizationManager.setLaunchSettingsFromCam();
+		} else if (currentlyPressedKeys[84]) { // t
+			toggleTime();
+		} else if (currentlyPressedKeys[82]) { // r
+			slowTimeToggle();
+		} else if (currentlyPressedKeys[27]) { // Escape
+			closePopup();
+		}
+	}
+}
+
+function handleKeyUp(event) {
+	currentlyPressedKeys[event.keyCode] = 0;
+}
+
+var pitchRate = 0;
+var pitch = 0;
+
+var yawRate = 0;
+var yaw = 0;
+
+var forwardSpeed = 0;
+var sideSpeed = 0;
+var verticalSpeed = 0;
+
+function handleKeys() {
+
+	if (currentlyPressedKeys[38]) {
+		// Up arrow
+		pitchRate = Math.PI * getSpeed(currentlyPressedKeys[38]);
+	} else if (currentlyPressedKeys[40]) {
+		// Down arrow
+		pitchRate = -Math.PI * getSpeed(currentlyPressedKeys[40]);
+	} else if (directionTouch) {
+		pitchRate = (-PI_2) * getPercentage(directionTouch.clientY - dirTouchCenter.y - hudCanvas.offsetTop, maxTouchDistance);
+	} else {
+		pitchRate = 0;
+	}
+
+	if (currentlyPressedKeys[37]) {
+		// Left cursor key
+		yawRate = Math.PI * getSpeed(currentlyPressedKeys[37]);
+	} else if (currentlyPressedKeys[39]) {
+		// Right cursor key
+		yawRate = -Math.PI * getSpeed(currentlyPressedKeys[39]);
+	} else if (directionTouch) {
+		yawRate = (-PI_2) * getPercentage(directionTouch.clientX - dirTouchCenter.x, maxTouchDistance);
+	} else {
+		yawRate = 0;
+	}
+
+	if (currentlyPressedKeys[87]) {
+		// W
+		forwardSpeed = 5 * getSpeed(currentlyPressedKeys[87]);
+	} else if (currentlyPressedKeys[83]) {
+		// S
+		forwardSpeed = -5 * getSpeed(currentlyPressedKeys[83]);
+	} else if (positionTouch) {
+		forwardSpeed = -5 * getPercentage(positionTouch.clientY - posTouchCenter.y - hudCanvas.offsetTop, maxTouchDistance);
+	} else {
+		forwardSpeed = 0;
+	}
+	
+	if (currentlyPressedKeys[65]) {
+		// A
+		sideSpeed = -5 * getSpeed(currentlyPressedKeys[65]);
+	} else if (currentlyPressedKeys[68]) {
+		// D
+		sideSpeed = 5 * getSpeed(currentlyPressedKeys[68]);
+	} else if (positionTouch) {
+		sideSpeed = 5 * getPercentage(positionTouch.clientX - posTouchCenter.x, maxTouchDistance);
+	} else {
+		sideSpeed = 0;
+	}
+	if (currentlyPressedKeys[32]) {
+		// Spacebar
+		verticalSpeed = 5 * getSpeed(currentlyPressedKeys[32]);
+	} else if (currentlyPressedKeys[16]) {
+		// Shift
+		verticalSpeed = -5 * getSpeed(currentlyPressedKeys[16]);
+	} else if (vertTouch) {
+		verticalSpeed = -5 * getPercentage(vertTouch.clientY - vertTouchCenter.y - hudCanvas.offsetTop, maxTouchDistance);
+	} else {
+		verticalSpeed = 0;
+	}
+}
+function getSpeed(ms) {
+	let temp = Math.max(0.05, Math.min(1, (Date.now() - ms)/200));
+	return temp;
+}
+
+function getPercentage(relativeCoordinate, maxTouchDistance) {
+	var noEffectDist = maxTouchDistance / 4;
+	return Math.sign(relativeCoordinate) * Math.min(Math.max((Math.abs(relativeCoordinate) - noEffectDist), 0) / (maxTouchDistance - noEffectDist), 1);
+}
+
+// ----------------------------------------------------------- //
+// ------------------------ Settings ------------------------- //
+// ----------------------------------------------------------- //
+var settings = [];
+
+function Setting(title, functionToCall) {
+	var options = [];
+	
+	var Option = function(title, functionCallData, enabled) {
+		if(enabled === undefined) {
+			enabled = false;
+		}
+		
+		this.title = title;
+		this.functionCallData = functionCallData;
+		this.enabled = enabled;
+	}
+	
+	this.title = title;
+	this.functionToCall = functionToCall;
+	this.addOption = function(title, functionCallData, enabled) {
+		if(enabled === undefined) {
+			enabled = false;
+		}
+		
+		var newOption = new Option(title, functionCallData, enabled);
+		if(enabled) {
+			this.functionToCall(newOption.functionCallData);
+		}
+		options.push(newOption);
+	}
+	
+	this.getOptions = function() {
+		return options;
+	}
+	
+	this.getOption = function(name) {
+		var length = options.length;
+		for(var i = 0; i < length; i++) {
+			if(name == options[i].title)
+				return options[i];
+		}
+		return null;
+	}
+}
+
+function getSetting(name) {
+	var length = settings.length;
+	for(var i = 0; i < length; i++) {
+		if(settings[i].title === name) {
+			return settings[i];
+		}
+	}
+	return null;
+}
+
+function updateSetting(settingName, optionName) {
+	var setting = getSetting(settingName);
+	if(setting == null) {
+		console.log("Unknown setting");
+	} else {
+		var option = setting.getOption(optionName);
+		if(option == null) {
+			console.log("Unknown option");
+		} else if (option.enabled) {
+			console.log("Option already selected");
+		} else {
+			setting.functionToCall(option.functionCallData);
+			var options = setting.getOptions();
+			var length = options.length;
+			for(var i = 0; i < length; i++) {
+				if(options[i].enabled)
+					options[i].enabled = false;
+			}
+			option.enabled = true;
+		}
+	}
+}
+
+function setPowerSaverMode(newValue) {
+	if(newValue == true) {
+		tickMod = 2;
+	} else {
+		tickMod = 1;
+	}
+}
+
+function setCollisionDetectionEnabled(newValue) {
+	collisionDetectionEnabled = newValue;
+}
+
+function setLookAtSelected(value) {
+	lookAtSelected = value;
+}
+
+function setDownsampled(downsampled) {
+	if(downsampled) {
+		resolutionScaleOfCanvas = 2;
+	} else {
+		resolutionScaleOfCanvas = 1;
+	}
+	resizeRenderer();
+}
+
+function setParticleSystem(enable) {
+	if(!particleSystem && enable) {
+		particleSystem = new THREE.GPUParticleSystem( {
+			maxParticles: 50000
+		} );
+		
+		particleOptions = {
+			position: new THREE.Vector3(),
+			positionRandomness: .3,
+			velocity: new THREE.Vector3(),
+			velocityRandomness: 0,
+			color: 0xba720d,
+			colorRandomness: .2,
+			turbulence: 0.01,
+			lifetime: 1,
+			size: 4,
+			sizeRandomness: 2
+		};
+		
+		scene.add(particleSystem);
+	} else if (particleSystem && !enable) {
+		scene.remove(particleSystem);
+		particleSystem = undefined;
+	}
+}
+
+
+function loadSettings() {
+	var psSetting = new Setting("Power-saver mode", setPowerSaverMode);
+	psSetting.addOption("Enabled", true, true);
+	psSetting.addOption("Disabled", false);
+	settings.push(psSetting);
+	
+	var cdSetting = new Setting("Collision detection", setCollisionDetectionEnabled);
+	cdSetting.addOption("Enabled", true, true);
+	cdSetting.addOption("Disabled", false);
+	settings.push(cdSetting);
+	
+	var lookAtSetting = new Setting("Look at selected projectile", setLookAtSelected);
+	lookAtSetting.addOption("Enabled", true, true);
+	lookAtSetting.addOption("Disabled", false);
+	settings.push(lookAtSetting);
+	
+	var downsampleSetting = new Setting("Quality", setDownsampled);
+	downsampleSetting.addOption("High", true);
+	downsampleSetting.addOption("Normal", false, true);
+	settings.push(downsampleSetting);
+
+	var particlesSetting = new Setting("Particles", setParticleSystem);
+	particlesSetting.addOption("Enabled", true, true);
+	particlesSetting.addOption("Disabled", false);
+	settings.push(particlesSetting);
+}
+
+// ----------------------------------------------------------- //
+// ----------------------- PROJECTILES ----------------------- //
+// ----------------------------------------------------------- //
+
+// ----------------------------------------------------------------- //
+// TODO: Take several forces into consideration, like normal force.  //
+// This will fix the ground issues.                                  //
+// ----------------------------------------------------------------- //
+
+var projectiles = [];
+var projectilesByID = {};
+var collisionDetectionEnabled = true;
+
+var c = new M.Context();
+c.a = M("a", c);
+c.r = M("r", c);
+c.v = M("v", c);
+
+var defaultPositionEquation = "r + (v * t) + ( 1/2 )(a * t ^ 2)";
+var positionEquation;
+var velocityEquation;
+var positionEquationCompiled;
+var velocityEquationCompiled;
+
+function setPositionEquation(equationString) {
+}
+
+/**
+ * Converts a 3D vector into a string
+ */
+function vectorToString(vector) {
+	return "(" + (Math.round( vector.x * 10) / 10).toFixed(1) + ", " + (Math.round( vector.y * 10) / 10).toFixed(1) + ", " + (Math.round( vector.z * 10) / 10).toFixed(1) + ")";
+}
+
+
+function Projectile(initialPosition, initialVelocity, mass, radius, time) {
+	console.log("Created sphere with radius " + radius + " and initial time " + time);
+	
+	
+	// THREE.js
+	this.geometry = new THREE.SphereGeometry( radius, 20, 20);
+	var material = new THREE.MeshPhongMaterial( {color: Math.floor(Math.random()*16777215), wireframe: false, transparent: true} );
+	this.mesh = new THREE.Mesh( this.geometry, material );
+	
+	projectilesByID[this.mesh.uuid] = this;
+	
+	this.mesh.position.x = initialPosition.x;
+	this.mesh.position.y = initialPosition.y;
+	this.mesh.position.z = initialPosition.z;
+	this.mesh.castShadow = true;
+	this.mesh.receiveShadow = true;
+	
+	// AMMO.js
+	var margin = 0.05;
+	var shape = new Ammo.btSphereShape( radius );
+	shape.setMargin( margin );
+	var localInertia = new Ammo.btVector3( 0, 0, 0 );
+	shape.calculateLocalInertia( mass, localInertia );
+	var transform = new Ammo.btTransform();
+	transform.setIdentity();
+	var pos = this.mesh.position;
+	transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
+	var motionState = new Ammo.btDefaultMotionState( transform );
+	var rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, shape, localInertia, 0, 0, 0, 0, 1 );
+	var body = new Ammo.btRigidBody( rbInfo );
+	body.setLinearVelocity(new Ammo.btVector3( initialVelocity.x, initialVelocity.y, initialVelocity.z ));
+	this.physicsBody = body;
+	physicsWorld.addRigidBody( body );
+	
+	// FINAL/CURRENT variables
+	// Updated as often as needed.
+	var position = this.mesh.position; // Update every tick
+	this.getPosition = function() { return position; }
+
+	var velocity = new THREE.Vector3(0,0,0); // Update Every tick
+	this.getVelocity = function() { return velocity; }
+	
+	var acceleration = new THREE.Vector3(0,-9.8,0); // Update every time a new force is applied
+	this.getAcceleration = function() { return acceleration; }
+	
+	// INITIAL variables
+	var initialPosition = initialPosition.clone(); // Updated when initial acceleration or initial elocity changes
+	this.getInitialPosition = function() { return initialPosition; }
+	
+	if(initialVelocity === undefined) { initialVelocity = new THREE.Vector3(0,0,0); }
+	this.getInitialVelocity = function() { return initialVelocity; }
+	
+	var initialTime = time;
+	this.getInitialTime = function() { return initialTime; }
+
+
+	// OTHER
+	this.getRotation = function() { return this.mesh.rotation; }
+	this.orientationQuaternion = new THREE.Quaternion(0,0,0,0);
+	this.spinQuaternion = new THREE.Quaternion(0,0,0,0);
+	this.angularVelocity = new THREE.Vector3(0,0,0);
+	
+	this.getRadius = function() { return radius }
+	
+	this.number =  projectiles.length + 1;
+	projectiles.push(this);
+	
+	scene.add(this.mesh);
+	octree.add(this.mesh);
+	octree.update();
+	
+	this.calulateForces = function() {
+
+	}
+
+	this.update = function(currentTime, elapsed, collided, isSecondCall) {
+		
+		var objPhys = this.physicsBody;
+		var ms = objPhys.getMotionState();
+		
+		if (ms) {
+			ms.getWorldTransform( transformAux1 );
+			var p = transformAux1.getOrigin();
+			var q = transformAux1.getRotation();
+			this.mesh.position.set( p.x(), p.y(), p.z() );
+			this.mesh.quaternion.set( q.x(), q.y(), q.z(), q.w() );
+			var ammoVelocity = this.physicsBody.getLinearVelocity();
+			velocity.set(ammoVelocity.x(), ammoVelocity.y(), ammoVelocity.z());
+		}
+	}
+	
+	this.wallCollision = function(x, y, z, timeOfLastFrame, timeSinceInitial) {
+		
+		collided = true;
+		
+		// Spawns particles to make collisions clear
+		if(particleSystem) {
+			particleOptions.position.x = (x == null ? position.x : x);
+			particleOptions.position.y = (y == null ? position.y : y);
+			particleOptions.position.z = (z == null ? position.z : z);
+			for(var i = 0; i < 300; i++) {
+				particleOptions.velocity.x = Math.random() * (x == null ? 2 - 1 : -0.4 * Math.sign(x));
+				particleOptions.velocity.y = Math.random() * (y == null ? 2 - 1 : -0.4 * Math.sign(y));
+				particleOptions.velocity.z = Math.random() * (z == null ? 2 - 1 : -0.4 * Math.sign(z));
+				particleSystem.spawnParticle(particleOptions);
+			}
+		}
+	}
+	
+	this.updateIVariables = function(relativeTimeOfCollision) {
+	}
+}
+
+
+// ----------------------------------------------------------- //
+// ---------------------- User Interface --------------------- //
+// ----------------------------------------------------------- //
+
+// The scale, relative to the actual display width, that the canvas will render at.
+// Anything more than 1 is pointless. 
+var resolutionScaleOfCanvas = 1; // Barely improved performance below 1. Increase to 2 for high quality.
+
+/* Popups and Dropdowns */
+
+/**
+ * On calling of this function, a popup will display on screen, and 
+ *
+ * @param title: A string of the name of the title of the window.
+ */
+function openPopup(title) {
+	var overlayContainer = document.getElementById("overlay-popup-container");
+	var titleDivs = overlayContainer.getElementsByClassName("popup-title");
+	var contentDivs = overlayContainer.getElementsByClassName("popup-content");
+	var index = title.indexOf(".html");
+	var visibleTitle = title.charAt(0).toUpperCase() + title.substring(1, index == -1 ? title.length : index);
+	
+	for(var i = 0; i < titleDivs.length; i++) {
+		titleDivs[i].innerHTML = visibleTitle;
+	}
+	
+	var contentHTML;
+
+	if(title.toLowerCase() === "settings") {
+		contentHTML = getSettingsHTML();
+	} else if(title.endsWith("html")) {
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("GET", title, false);
+		xmlhttp.send();
+		if(xmlhttp.status == 200) {
+			contentHTML = xmlhttp.responseText;
+		} else {
+			contentHTML = "Count not load popup. Status: " + xmlhttp.statusText;
+		}
+	} else {
+		contentHTML = "Unknown popup";
+	}
+	
+	for(var i = 0; i < contentDivs.length; i++) {
+		contentDivs[i].innerHTML = contentHTML;
+	}
+	overlayContainer.style.display = "inherit";
+	setTimeout( function() {
+		if(overlayContainer.style.display === "inherit") {
+			overlayContainer.style.opacity = "1";
+		}
+	}, 5);
+	
+	document.getElementById("simulator").style.filter = "blur(4px)";
+}
+
+// For backwards compatibility
+if(!String.prototype.endsWith) {
+	String.prototype.endsWith = function(pattern) {
+	  var d = this.length - pattern.length;
+	  return d >= 0 && this.lastIndexOf(pattern) === d;
+	};
+}
+
+function getSettingsHTML() {
+	var html = '';
+	
+	if(settings) {
+		for(var i = 0; i < settings.length; i++) {
+			
+			var setting = settings[i];
+			var options = setting.getOptions();
+			var optionsLength = options.length;
+			
+			html+= '<form>\n<div class="setting">';
+			html+= '<div class="setting-title">' + setting.title + '</div>';
+			html+= '<form>';
+			for(var j = 0; j < optionsLength; j++) {
+				var option = options[j];
+				
+				html+= '<input type="radio" name="' + setting.title + '" value="' + option.functionCallData + '"' + (option.enabled ? "checked" : "") + ' onclick=\'updateSetting("' + setting.title + '", "' + option.title + '")\'>' + option.title + '';
+			}
+			html+= '</form>';
+			html+= '</div>\n</form>';
+		}
+	} else {
+		html = '<h2>Settings not loaded.</h2>';
+	}
+	
+	return html;
+}
+
+function closePopup() {
+	var overlayContainer = document.getElementById("overlay-popup-container");
+	var titleDivs = overlayContainer.getElementsByClassName("popup-title");
+	for(var i = 0; i < titleDivs.length; i++) {
+		titleDivs[i].innerHTML = "";
+	}
+
+	overlayContainer.style.opacity = "0";
+	document.getElementById("simulator").style.filter = "none";
+	
+	if(overlayContainer.style.display !== "none") {
+		setTimeout( function() {
+			if(overlayContainer.style.opacity === "0") {
+				overlayContainer.style.display = "none";
+			}
+		}, 200);
+	}
+}
+
+function toggleDropdown(dropDownName, elementToBeUnder) {
+	var dropDown = document.getElementById(dropDownName);
+	if(dropDown) {
+		if(getComputedStyle(dropDown).display !== "none") { // is currently visible
+			
+		} else {
+			// Make sure display block goes before all of the other stuff
+			dropDown.style.display = "block";
+			
+			var pointerX = elementToBeUnder.offsetLeft + elementToBeUnder.offsetWidth / 2;
+			var pointerY = elementToBeUnder.offsetTop + elementToBeUnder.offsetHeight;
+			var maxX = document.body.clientWidth - dropDown.clientWidth;
+			
+			var windowX = pointerX - dropDown.offsetWidth / 2;
+			
+			windowX = Math.min(windowX, maxX - 10);
+			windowX = Math.max(windowX, 10);
+			dropDown.style.left = windowX + "px";
+			dropDown.style.top = pointerY + "px";
+			var arrows = dropDown.getElementsByClassName("dropdown-arrow");
+			
+			for(var i = 0; i < arrows.length; i++) {
+				arrows[i].style.left = (pointerX - windowX - arrows[i].offsetWidth / 2) + "px";
+			}
+			
+			setTimeout( function() {
+				if(dropDown.style.display === "block") { // Makes sure it is the same
+					dropDown.classList.add("dropdown-visible");
+				}
+			}, 5);
+		}
+	}
+}
+
+function closeDropdown(dropDown) {
+	dropDown.classList.remove("dropdown-visible");	
+	setTimeout( function() {
+		if(!dropDown.classList.contains("dropdown-visible")) { // Makes sure it is the same
+			dropDown.style.display = "none";
+		}
+	}, 250);
+}
+
+function closeAllDropdowns() {
+	var dropdowns = document.getElementsByClassName("dropdown");
+	for (var i = 0; i < dropdowns.length; i++) {
+		var openDropdown = dropdowns[i];
+		if (openDropdown.classList.contains('dropdown-visible')) {
+			closeDropdown(openDropdown);
+		}
+	}
+}
+
+window.addEventListener("resize", closeAllDropdowns);
+
+document.addEventListener("click", function(e) {
+	var element = document.getElementById('overlay-popup-container');
+	if(element !== undefined && element.style.display !== "none") {
+		if (e.target.className == "sidepanel-closebutton") {
+			closeNav();
+		} else if (e.target === element || e.target.className == "popup-closebutton") {
+			closePopup();
+		}
+	}
+	
+	if(e.target && !getParentElement(e.target, "dropdown")) {
+		closeAllDropdowns();
+	}
+	
+	if(e.target) {
+		var parentElement = getParentElement(e.target, "panel-section-toggle");
+		if(parentElement) {
+			var next = parentElement.nextElementSibling;
+			if(next) {
+				// Found. Now close all others.
+				var allSections = document.getElementsByClassName("panel-section-toggle"), length = allSections.length;
+				for(var i = 0; i < length; i++) {
+					if(allSections[i] !== parentElement) {
+						allSections[i].nextElementSibling.style.display = "none";
+					}
+				}
+				
+				if(next.style.display === "none") {
+					next.style.display = "block";
+				} else {
+					next.style.display = "none";
+				}
+			}
+		}
+	}
+});
+
+function getParentElement(element, className) {
+	while(element != undefined) {
+		if(element.className && element.className.split(" ").indexOf(className) !== -1) {
+			return element;
+		}
+
+		element = element.parentElement;
+	}
+	return null;
+}
+
+// --------------------------------------------------- //
+// ------------------ Visualizations ----------------- //
+// --------------------------------------------------- //
+
+var visualizationManager;
+
+function VisualizationManager() {
+	var glowMaterial, glowProjectile, selectedProjectile;
+	var initialParametersArrow, accelerationArrow, velocityArrow;
+	var initialParamsColor = 0x00ff00, accelerationColor = 0x991010, velocityColor = 0x00dcff;
+	var headLength = 0.6;
+	
+	// Loads the texture.
+	loadSelectionGlowTexture();
+	
+	this.getSelectedProjectile = function() { return selectedProjectile }
+	
+	this.update = function(elapsed) {
+		if(selectedProjectile) {
+			if(elapsed !== 0)
+				updateSidePanel();
+			updateSelectionMarker();
+			updateArrows();
+		}
+	}
+	
+	this.deselectProjectile = function() {
+		if(glowProjectile) {
+			scene.remove(glowProjectile);
+		}
+		selectedProjectile = null;
+		document.getElementById("projectile-data").className = "";
+		document.getElementById("projectile-launcher").className = "visible";
+		
+		this.disableAllArrows();
+	}
+	
+	this.selectProjectile = function(projectile) {
+		if(glowProjectile) {
+			// Old one
+			scene.remove(glowProjectile);
+		}
+		
+		// Creates the glowing sphere
+		var geometry = new THREE.SphereGeometry(projectile.getRadius() * 1.5, 20, 20);
+		
+		glowMaterial.uniforms.viewVector.value = new THREE.Vector3().subVectors( yawObject.position, projectile.getPosition() );
+		glowProjectile = new THREE.Mesh( geometry, glowMaterial);
+		
+		glowProjectile.position.copy(projectile.getPosition());
+		scene.add( glowProjectile );
+		
+		selectedProjectile = projectile;
+		document.getElementById("projectile-data").className = "visible";
+		document.getElementById("projectile-launcher").className = "";
+		
+		document.getElementById("arrows-enabled").checked = false;
+	}
+	
+	this.launchProjectile = function() {
+
+		var initialVelocity = new THREE.Vector3();
+		var initialPosition = new THREE.Vector3();
+		
+		initialVelocity.x = parseFloat(document.getElementById("launch-velocity-x").value);
+		initialVelocity.y = parseFloat(document.getElementById("launch-velocity-y").value);
+		initialVelocity.z = parseFloat(document.getElementById("launch-velocity-z").value);
+		initialPosition.x = parseFloat(document.getElementById("launch-position-x").value);
+		initialPosition.y = parseFloat(document.getElementById("launch-position-y").value);
+		initialPosition.z = parseFloat(document.getElementById("launch-position-z").value);
+		var radius = parseFloat(document.getElementById("launch-radius").value);
+
+		var projectile = new Projectile(initialPosition, initialVelocity, 1, radius, time);
+		
+		if(visualizationManager !== null) {
+			visualizationManager.selectProjectile(projectile);
+		}
+	}
+	
+	function loadSelectionGlowTexture() {
+		glowMaterial = new THREE.ShaderMaterial( 
+		{
+			uniforms: 
+			{ 
+				"c":   { type: "f", value: 0.2 },
+				"p":   { type: "f", value: 3 },
+				glowColor: { type: "c", value: new THREE.Color(0xffee00) },
+				viewVector: { type: "v3", value: new THREE.Vector3(0,0,0) }
+			},
+			vertexShader:   document.getElementById( 'vertexShader'   ).textContent,
+			fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+			side: THREE.BackSide,
+			blending: THREE.AdditiveBlending,
+			transparent: true
+		}
+		);
+	}
+	
+	function updateSelectionMarker() {
+		glowProjectile.position.copy(selectedProjectile.getPosition());
+		glowMaterial.uniforms.viewVector.value = new THREE.Vector3().subVectors( yawObject.position, selectedProjectile.getPosition() );
+	}
+	
+	
+	function updateSidePanel() {
+		document.getElementById("position-value").innerHTML = vectorToString(selectedProjectile.getPosition());
+		document.getElementById("initial-position-value").innerHTML = vectorToString(selectedProjectile.getInitialPosition());
+		document.getElementById("velocity-value").innerHTML = vectorToString(selectedProjectile.getVelocity());
+		document.getElementById("initial-velocity-value").innerHTML = vectorToString(selectedProjectile.getInitialVelocity());
+		document.getElementById("acceleration-value").innerHTML = vectorToString(selectedProjectile.getAcceleration());
+		document.getElementById("delta-time-value").innerHTML = (Math.round( (time - selectedProjectile.getInitialTime()) * 1000) / 1000).toFixed(3);
+	}
+	
+	this.setLaunchSettingsFromCam = function() {
+		document.getElementById("launch-velocity-x").value = Math.round(-Math.sin(yawObject.rotation.y) * 5 * 10000)/10000;
+		document.getElementById("launch-velocity-y").value = Math.round(Math.sin(pitchObject.rotation.x) * 9.81 * 10000)/10000;
+		document.getElementById("launch-velocity-z").value = Math.round(-Math.cos(yawObject.rotation.y) * 5 * 10000)/10000;
+		document.getElementById("launch-position-x").value = Math.round(yawObject.position.x * 10000)/10000;
+		document.getElementById("launch-position-y").value = Math.round(yawObject.position.y * 10000)/10000;
+		document.getElementById("launch-position-z").value = Math.round(yawObject.position.z * 10000)/10000;
+	}
+	this.setLaunchSettingsFromCam(); // Run it.
+	
+	// Arrows
+	
+	function updateArrows() {
+		if(initialParametersArrow) {
+			var initialPosition = selectedProjectile.getInitialPosition();
+			
+			if(initialParametersArrow.line.scale.y + headLength !== selectedProjectile.getInitialVelocity().length()) {
+				initialParametersArrow.setLength(selectedProjectile.getInitialVelocity().length(), headLength, headLength * 0.5);
+			}
+			initialParametersArrow.setDirection(selectedProjectile.getInitialVelocity().clone().normalize());
+			if(!initialParametersArrow.position.equals(initialPosition)) {
+				initialParametersArrow.position.x = initialPosition.x;
+				initialParametersArrow.position.y = initialPosition.y;
+				initialParametersArrow.position.z = initialPosition.z;
+			}
+		}
+		
+		if(velocityArrow) {
+			var position = selectedProjectile.getPosition();
+			if(!velocityArrow.position.equals(position)) {
+				velocityArrow.position.x = position.x;
+				velocityArrow.position.y = position.y;
+				velocityArrow.position.z = position.z;
+			}
+			velocityArrow.setDirection(selectedProjectile.getVelocity().clone().normalize());
+			velocityArrow.setLength(selectedProjectile.getVelocity().length(), headLength, headLength * 0.5);
+		}
+		
+		if(accelerationArrow) {
+			var position = selectedProjectile.getPosition();
+			if(!accelerationArrow.position.equals(position)) {
+				accelerationArrow.position.x = position.x;
+				accelerationArrow.position.y = position.y;
+				accelerationArrow.position.z = position.z;
+			}
+			
+			if(accelerationArrow.line.scale.y + headLength !== selectedProjectile.getAcceleration().length()) {
+				accelerationArrow.setLength(selectedProjectile.getAcceleration().length(), headLength, headLength * 0.5);
+				accelerationArrow.setDirection(selectedProjectile.getAcceleration().clone().normalize(), headLength, headLength * 0.5);
+			}
+		}
+	}
+	
+	this.enableInitialParamsArrow = function() {
+		if(!initialParametersArrow && selectedProjectile) {
+			document.getElementById("initial-position-value").parentElement.style.border = "1px solid #" + intToRGB(initialParamsColor);
+			document.getElementById("initial-velocity-value").parentElement.style.border = "1px solid #" + intToRGB(initialParamsColor);
+			initialParametersArrow = new THREE.ArrowHelper(selectedProjectile.getInitialVelocity().clone().normalize(), selectedProjectile.getInitialPosition(), selectedProjectile.getInitialVelocity().length(), initialParamsColor);
+			scene.add(initialParametersArrow);
+		}
+	}
+	
+	this.disableInitialParamsArrow = function() {
+		if(initialParametersArrow) {
+			document.getElementById("initial-position-value").parentElement.style.border = "none";
+			document.getElementById("initial-velocity-value").parentElement.style.border = "none";
+			scene.remove(initialParametersArrow);
+			
+			initialParametersArrow = null;
+		}
+	}
+	this.enableVelocityArrow = function() {
+		if(!velocityArrow && selectedProjectile) {
+			document.getElementById("velocity-value").parentElement.style.border = "1px solid #" + intToRGB(velocityColor);
+			velocityArrow = new THREE.ArrowHelper(selectedProjectile.getVelocity().clone().normalize(), selectedProjectile.getPosition(), selectedProjectile.getVelocity().length(), velocityColor);
+			scene.add(velocityArrow);
+		}
+	}
+	
+	this.disableVelocityArrow = function() {
+		if(velocityArrow) {
+			document.getElementById("velocity-value").parentElement.style.border = "none";
+
+			scene.remove(velocityArrow);
+			
+			velocityArrow = null;
+		}
+	}
+	
+	this.enableAccelerationArrow = function() {
+		if(!accelerationArrow && selectedProjectile) {
+			document.getElementById("acceleration-value").parentElement.style.border = "1px solid #" + intToRGB(accelerationColor);
+			accelerationArrow = new THREE.ArrowHelper(selectedProjectile.getAcceleration().clone().normalize(), selectedProjectile.getPosition(), selectedProjectile.getAcceleration().length(), accelerationColor);
+			scene.add(accelerationArrow);
+		}
+	}
+	
+	this.disableAccelerationArrow = function() {
+		if(accelerationArrow) {
+			document.getElementById("acceleration-value").parentElement.style.border = "none";
+
+			scene.remove(accelerationArrow);
+			
+			accelerationArrow = null;
+		}
+	}
+	
+	this.enableAllArrows = function() {
+		this.enableAccelerationArrow();
+		this.enableVelocityArrow();
+		this.enableInitialParamsArrow();
+	}
+	
+	this.disableAllArrows = function() {
+		this.disableAccelerationArrow();
+		this.disableVelocityArrow();
+		this.disableInitialParamsArrow();
+	}
+	
+	function intToRGB(i){
+		var c = (i & 0x00FFFFFF)
+			.toString(16)
+			.toUpperCase();
+
+		return "00000".substring(0, 6 - c.length) + c;
+	}
+}
+
+// --------------------------------------------------- //
+// --------------------- Other ----------------------- //
+// --------------------------------------------------- //
+
+var stats, spheresPanel, physicsPanel;
+
+function loadFPSStats() {
+	var script = document.createElement('script');
+    script.onload = function() {
+        stats = new Stats();
+		spheresPanel = stats.addPanel( new Stats.Panel( 'Spheres', '#ff8', '#221' ) );
+		physicsPanel = stats.addPanel( new Stats.Panel( 'PhysicsTime', '#fff', '#292e30' ) );
+		stats.showPanel( 0 )
+		simulator.appendChild( stats.dom );
+		stats.dom.style.position = "relative";
+    };
+    script.src = 'js/stats.min.js';
+    document.head.appendChild(script);
+}
+
+var tickMod = 1;
+
+function startLoop() {
+	//console.log(velocityEquation.toString());
+	var onEachFrame;
+	if(window.requestAnimationFrame) {
+		onEachFrame = function(callback) {
+			var _callback = function() { callback(); requestAnimationFrame(_callback); }
+			_callback();
+		};
+	} else if (window.webkitRequestAnimationFrame) {
+		onEachFrame = function(callback) {
+		var _callback = function() { callback(); webkitRequestAnimationFrame(_callback); }
+		_callback();
+		};
+	} else if (window.mozRequestAnimationFrame) {
+		onEachFrame = function(callback) {
+		var _callback = function() { callback(); mozRequestAnimationFrame(_callback); }
+		_callback();
+		};
+	} else {
+		alert("Your browser does not support RequestAnimationFrame! This simulator will not perform at optimal performance, and will use up more resources when you are using another tab.");
+		onEachFrame = function(callback) {
+			setvarerval(callback, 1000 / 60);
+		}
+	}
+
+	window.onEachFrame = onEachFrame;
+	var tickID = 0;
+	
+	window.onEachFrame(function() {
+		if(tickID++ % tickMod == 0) {
+		
+			if(stats) {
+				stats.begin();
+			}
+			try {
+				handleKeys();
+				animateThree();
+			} catch(error) {
+				alert("An error occured, things may not work correctly.\nIf this is not resolved by clicking 'okay', contact the developer.\n\nError message: " + error.message + "\nMore details in the console");
+				console.error(error.stack);
+			}
+			
+			if(stats) {
+				stats.end();
+				spheresPanel.update(projectiles.length, 100);
+			}
+		}
+	});
+};

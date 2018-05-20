@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Simulator</title>
+		<link rel="stylesheet" href="simulator.css">
+
+		<script src="simulator.js"></script>
+		<script src="three.min.js"></script>
+		<!--<script src="OrbitControls.js"></script>-->
+		<script src="threesimulator.js"></script>
+		<script src="OBJLoader.js"></script>
+		<script src="MTLLoader.js"></script>
+		<!--<script src="objLoader.js"></script>-->
+	</head>
+	<body onload="init();" onresize="resizeRenderer()">
+
+		<div id="simulator">
+			<!-- The canvas goes here -->
+		</div>
+
+		<div id="side_panel">
+			<div id="panel_button" onclick="openCloseNav();">
+				<div class="vertical_text">
+					Open
+				</div>
+			</div>
+			<div id="panel_content">
+				<div style="margin: 0 10px">No simulations loaded.</div>
+				<h1 id="FPS"></h1>
+			</div>
+		</div>
+	</body>
+</html>

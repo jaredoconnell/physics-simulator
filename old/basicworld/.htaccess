@@ -1,0 +1,4 @@
+AuthName "Private area"
+AuthType Basic
+AuthUserFile /var/www/html/https/school/.htpasswd
+require valid-user
