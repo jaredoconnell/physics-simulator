@@ -148,15 +148,21 @@
 							<div id="projectile-launcher" class="visible">
 								Initial velocity (x, y, z) <i>(m/s)</i>
 								<br>
-								<input id="launch-velocity-x" placeholder="x">
-								<input id="launch-velocity-y" placeholder="y">
-								<input id="launch-velocity-z" placeholder="z">
+								<input type="number" id="launch-velocity-x" placeholder="x">
+								<input type="number" id="launch-velocity-y" placeholder="y">
+								<input type="number" id="launch-velocity-z" placeholder="z">
+								<br>
+								OR Init-Speed & Direction (speed, yaw, pitch) (Degrees)
+								<br>
+								<input type="number" id="launch-speed" placeholder="speed" onchange="visualizationManager.updateAngle()">
+								<input type="number" id="launch-velocity-yaw" placeholder="yaw" onchange="visualizationManager.updateAngle()">
+								<input type="number" id="launch-velocity-pitch" placeholder="pitch" onchange="visualizationManager.updateAngle()">
 								<br>
 								Initial position (x, y, z) <i>(m)</i>
 								<br>
-								<input id="launch-position-x" placeholder="x">
-								<input id="launch-position-y" placeholder="y">
-								<input id="launch-position-z" placeholder="z">
+								<input type="number" id="launch-position-x" placeholder="x">
+								<input type="number" id="launch-position-y" placeholder="y">
+								<input type="number" id="launch-position-z" placeholder="z">
 								<br>
 								Radius <i>(m)</i>
 								<br>
