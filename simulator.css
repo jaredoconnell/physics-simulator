@@ -90,10 +90,15 @@ button:active{
 
 .panel-section {
 	border-bottom: 0.3vh solid #d2dae2;
-	padding: 0 1vh;
+	padding: 0 0.5vh;
+	margin: 0 0.7vh;
 	max-width: 60vh;
-	display: inline-table;
+	/*display: inline-table;*/
 	/*white-space: nowrap;*/
+}
+
+hr {
+	border-top: 0.1vh solid #d2dae2;
 }
 
 .panel-section > input {
@@ -103,6 +108,7 @@ button:active{
 .tab {
 	display: none;
 	height: 100%;
+	width: calc(100% - 3vh);
 }
 
 .tab h1 {
@@ -129,16 +135,17 @@ button:active{
 	display: inline-block;
 }
 
+#tile-info, #tile-edit, #tile-info-none, #tile-connector, #tile-connected-to-x, #tile-connected-to-z, #tile-connected-to-by-x, #tile-connected-to-by-z, #tile-connection-info {
+	display: none;
+}
 
 #simulator canvas {
 	margin: 0;
 	padding: 0;
 	position: fixed;
-	width: 100%;
-	height: 100%;
 }
 
-@media screen and (orientation: landscape) and (min-width: 1000px) {
+@media screen and (orientation: landscape)/* and (min-width: 1000px)*/ {
 	/* Wide screen, narrow menu at right side */
 	#simulator {
 		width: calc(100% - 53vh);
@@ -151,13 +158,13 @@ button:active{
 		height: 100%;
 	}
 	
-	.scrollable {
+	#side-pages {
 		overflow-x: show;
-		overflow-y: auto;
+		overflow-y: scroll;
 		height: 100%;
 	}
 }
-@media screen and (orientation: portrait), (max-width: 999px) {
+@media screen and (orientation: portrait)/*, (max-width: 999px)*/ {
 	/* Narrow screen, wide menu at bottom */
 	#simulator {
 		width: 100%;
@@ -171,19 +178,23 @@ button:active{
 		height: 42vh;
 	}
 	
-	.scrollable {
-		overflow-y: hidden;
-		overflow-x: auto;
-		height: 100%;
-		width: fit-content;
+	#side-pages {
+		overflow-y: scroll;
+		overflow-x: hidden;
+		height: calc(100% - 6vh);
 		white-space: nowrap;
 	}
 	
-	.tab h1 {
+	/* .tab h1 {
 		float: left;
 		width: auto;
 		height: 100%;
-	}
+		writing-mode: vertical-rl;
+		-webkit-transform: rotate(180deg); 
+		-moz-transform: rotate(180deg); 		
+		transform: rotate(180deg);
+		text-align: center;
+	} */
 	
 	.panel-section {
 		max-height: 30vh;
@@ -224,6 +235,7 @@ button:active{
 	padding: 0px;
 	height: 7vh;
 	vertical-align: middle;
+	padding: 0 0.3vh;
 }
 
 #icons {
@@ -256,6 +268,11 @@ button:active{
 	-webkit-transform: scale(0.95);
 	transform: scale(0.95);
 	filter: drop-shadow(0px 0px 0.9vh white);
+}
+
+.selected-icon {
+	border-bottom: 0.3vh solid #15a4fa;
+	background-color: #2f3949;
 }
 
 @media (max-width: 700px) {
@@ -415,7 +432,7 @@ button:active{
 
 #login-inputs {
 	display: inline-block;
-	width: 70%;
+	width: 60%;
 }
 #login-inputs input {
 	width: calc(100% - 0.5vh);

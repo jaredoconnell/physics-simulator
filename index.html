@@ -200,22 +200,64 @@
 					<div class="tab">
 						<h1>World</h1>
 						<div class="panel-section">
-							TODO: Make this work.
-							<select id="world-selector" onchange="selectWorld(this[this.selectedIndex].value)">
-								<option value="New" selected="selected">New</option>
-							</select>
+							<p>TODO: Make this work.
+								<select id="world-selector" onchange="selectWorld(this[this.selectedIndex].value)">
+									<option value="New" selected="selected">New</option>
+								</select>
+							</p>
 						</div>
 						<div class="panel-section">
-							<div id="tile-edit-none" class="visible">No tile selected.</div>
-							<div id="tile-edit">
-								<div>Tile: <div style="display: inline-block" id="tile-id"></div></div>
-								<div>Type: <div style="display: inline-block" id="tile-type"></div></div>
-								<input id="height-edit" type="number" name="quantity" onchange="
-								var t0 = performance.now();
-								visualizationManager.getSelectedTile().topLeftY =  parseFloat(this.value); visualizationManager.getSelectedTile().updateHeight();
-								var t1 = performance.now();
-								console.log('Call to doSomething took ' + (t1 - t0) + ' milliseconds.')
-								"/>
+							<div id="tile-info-none" class="visible">No tile selected.</div>
+							<div id="tile-info">
+								<p>
+									<div>Tile: <div style="display: inline-block" id="tile-id"></div></div>
+									<div>Type: <div style="display: inline-block" id="tile-type"></div></div>
+								</p>
+								<p id="height-edit">
+									Y-value:
+									<input type="number" name="quantity" onchange="
+									var height = parseFloat(this.value); if(!isNaN(height)) { visualizationManager.getSelectedTile().topLeftY = height; visualizationManager.getSelectedTile().updateHeight();}"/>
+								</p>
+							</div>
+						</div>
+						<div id="tile-connection-info">
+							<div class="panel-section">
+								<div id="tile-connector">
+									<!-- This is for before they connect to anything. -->
+									<p>Not connected. Connect to other tile:
+										<button id="connection-selector" type="button"
+											onclick="visualizationManager.initiateConnection();">Select Tile</button>
+										<br>
+										<span style="font-size: 65%;">Note: MUST BE IN THE SAME ROW OR COLUMN.</span>
+									</p>
+									<hr>
+								</div>
+								<div id="tile-connected-to-by-x">
+									<!-- This is for when another tile is connecting to it -->
+									Is being connected to by:
+									<div id="tile-connected-to-by-value-x"></div>
+									<button type="button" onclick="visualizationManager.selectTileUIUpdate(visualizationManager.getSelectedTile().adjacentX)">Go to Tile</button>
+									<hr>
+								</div>
+								<div id="tile-connected-to-by-z">
+									<!-- This is for when another tile is connecting to it -->
+									Is being connected to by:
+									<div id="tile-connected-to-by-value-z"></div>
+									<button type="button" onclick="visualizationManager.selectTileUIUpdate(visualizationManager.getSelectedTile().adjacentZ)">Go to Tile</button>
+									<hr>
+								</div>
+								<div id="tile-connected-to-x">
+									<!-- This is for when it is the one connecting to another tile.-->
+									Is connected to:
+									<div id="tile-connected-to-value-x"></div>
+									<button type="button" onclick="">Disconnect</button>
+								</div>
+								<div id="tile-connected-to-z">
+									<!-- This is for when it is the one connecting to another tile.-->
+									Is connected to:
+									<div id="tile-connected-to-value-z"></div>
+									<button type="button" onclick="">Disconnect</button>
+								</div>
 							</div>
 						</div>
 					</div>
