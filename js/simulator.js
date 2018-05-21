@@ -29,7 +29,7 @@ function init() {
 	initPhysics();
 		
 	//loadThreeWorld();
-	currentWorld = new World(`{"0":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":2,"connectedX":-3},"-1":{"y":0,"connectedZ":-4}},"1":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":1},"-1":{"y":0,"connectedZ":-4}},"2":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":2},"-2":{"y":0,"connectedZ":-4},"-1":{"y":0}},"3":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"4":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"xValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"-4":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":20}},"-3":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"-2":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"-1":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}}}`);
+	currentWorld = new World(`{"0":{"0":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-5,-4,-1,0,2,3,4],"-5":{"y":0},"-4":{"y":2,"connectedX":-3},"-1":{"y":0,"connectedZ":-4}},"1":{"0":{"y":0},"1":{"y":0,"connectedZ":1,"connectedX":-2},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-5,-4,-1,0,1,2,3,4],"-5":{"y":0},"-4":{"y":1},"-1":{"y":0,"connectedZ":-4}},"2":{"0":{"y":0},"1":{"y":0},"4":{"y":1,"connectedZ":1},"zValues":[-5,-4,-2,-1,0,1,4],"-5":{"y":0},"-4":{"y":2},"-2":{"y":0,"connectedZ":-4},"-1":{"y":0}},"3":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-5,-4,-3,-2,-1,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"4":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-5,-4,-3,-2,-1,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"xValues":[-5,-4,-3,-2,-1,0,1,2,3,4],"-5":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-5,-4,-3,-2,-1,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"-4":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-5,-4,-3,-2,-1,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":20}},"-3":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-5,-4,-3,-2,-1,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"-2":{"0":{"y":0},"1":{"y":1},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-5,-4,-3,-2,-1,0,1,2,3,4],"-5":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"-1":{"0":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-5,-4,-3,-2,-1,0,2,3,4],"-5":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}}}`/*`{"0":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":2,"connectedX":-3},"-1":{"y":0,"connectedZ":-4}},"1":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":1},"-1":{"y":0,"connectedZ":-4}},"2":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":2},"-2":{"y":0,"connectedZ":-4},"-1":{"y":0}},"3":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"4":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"xValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"-4":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":20}},"-3":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-4":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"-2":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}},"-1":{"0":{"y":0},"1":{"y":0},"2":{"y":0},"3":{"y":0},"4":{"y":0},"zValues":[-1,-2,-3,-4,-5,0,1,2,3,4],"-5":{"y":0},"-3":{"y":0},"-2":{"y":0},"-1":{"y":0}}}`*/);
 	worlds.push(currentWorld);
 	
 	// Renderer
@@ -334,6 +334,27 @@ class World {
 			//scene: scene // optional, pass scene as parameter only if you wish to visualize octree
 		});
 	}
+	
+	removeFromData(x, z) {
+		if(this.data.xValues.indexOf(x) >= 0) {
+			let xRowOfZData = this.data[x];
+			let index = xRowOfZData.zValues.indexOf(z);
+			if(index >= 0) {
+				xRowOfZData.zValues.splice(index, 1);
+				xRowOfZData[z] = undefined;
+			}
+		}
+	}
+
+	updateHeight(x, y, z) {
+		if(this.data.xValues.indexOf(x) >= 0) {
+			let xRowOfZData = this.data[x];
+			
+			if(xRowOfZData.zValues.indexOf(z) >= 0) {
+				xRowOfZData[z].y = y;
+			}
+		}
+	}
 
 	renderVertices() {
 		
@@ -357,7 +378,7 @@ class World {
 					for(let z of xRowOfZData.zValues) {
 						let tileObject = xRowOfZData[z];
 						if(tileObject) {
-							xRowOfZVertexData[z] = new VertexData(x, z, this, 0, 0, tileObject);
+							xRowOfZVertexData[z] = new VertexData(x, z, this, 0, 0, false, tileObject);
 						}
 					}
 				}
@@ -406,7 +427,7 @@ class World {
 	}
 }
 
-var wallColor = new THREE.Color(0x505454);
+var flatColor = new THREE.Color(0x505454);
 var generic = new THREE.Color(0x8996A0);
 var generic2 = new THREE.Color(0x8E9BA5);
 
@@ -427,15 +448,16 @@ class VertexData {
 	 * xSlope: How much it is sloping in the x dir
 	 * zSlope: How much it is sloping in the z dir
 	 */
-	constructor(x, z, world, xSlope, zSlope, yData) {
+	constructor(x, z, world, xSlope, zSlope, connected, yData) {
 		this.x = x;
 		this.z = z;
 		this.world = world;
 		this.xSlope = xSlope;
 		this.zSlope = zSlope;
 		this.isSelected = false;
+		this.connected = connected;
 		
-		if(isNaN(yData)) {
+		if(!connected) {
 			this.topLeftY = yData.y;
 			this.connectedX = yData.connectedX;
 			this.connectedZ = yData.connectedZ;
@@ -455,6 +477,14 @@ class VertexData {
 
 	}
 	
+	setRemoteX(rmt) {
+		this.remoteX = rmt;
+
+	}
+	setRemoteZ(rmt) {
+		this.remoteX = rmt;
+	}
+	
 	// TODO: Make it so that the tile is lighter when in contact with the sphere.
 	setSelected(selected) {
 		this.isSelected = selected;
@@ -472,7 +502,7 @@ class VertexData {
 		var verticalExpansion = 0.005;
 		var horizontalExpansion = 0.01;
 		
-		if(this.xSlope == 0 && this.zSlope == 0) {
+		if(!this.connected) {
 			this.shape = new Ammo.btBoxShape( new Ammo.btVector3(0.5 + horizontalExpansion * 2, Math.abs(this.topLeftY - minY) + verticalExpansion, 0.5 + horizontalExpansion * 2) );
 		} else {
 			this.shape = new Ammo.btConvexHullShape();
@@ -492,7 +522,7 @@ class VertexData {
 		this.shape.calculateLocalInertia( mass, localInertia );
 		var transform = new Ammo.btTransform();
 		transform.setIdentity();
-		transform.setOrigin(this.xSlope == 0 && this.zSlope == 0 ? new Ammo.btVector3( this.x + 0.5 + horizontalExpansion, minY, this.z + 0.5 + horizontalExpansion) : new Ammo.btVector3(this.topLeft.x, 0, this.topLeft.z));
+		transform.setOrigin(!this.connected ? new Ammo.btVector3( this.x + 0.5 + horizontalExpansion, minY, this.z + 0.5 + horizontalExpansion) : new Ammo.btVector3(this.topLeft.x, 0, this.topLeft.z));
 		var motionState = new Ammo.btDefaultMotionState( transform );
 		var rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, this.shape, localInertia, 0, 0, 0, 0, 1 );
 		this.body = new Ammo.btRigidBody( rbInfo );
@@ -500,6 +530,69 @@ class VertexData {
 
 		this.world.physicsWorld.addRigidBody(this.body);
 
+	}
+	
+	canConnectTo(tile) {
+		// TODO: Handle too close ones.
+		if(this.connected || this.x < tile.x || this.z < tile.z || tile.connected || tile.remoteX || tile.remoteZ) {
+			return false;
+		}
+		if(this.x == tile.x) {
+			if(this.connectedZ) {
+				return false; // already connected
+			}
+			let Zs = this.world.vertexMap[this.x];
+			if(Zs) {
+				for(let zDiff = -1; zDiff > tile.z - this.z; zDiff--) { // Between the two tiles
+					let testTile = Zs[this.z + zDiff];
+					if(testTile) { // check existing
+						if(testTile.connected || testTile.connectedToZ) {
+							return false;
+						}
+					}
+				}
+			}
+		} else if (this.z == tile.z) {
+			if(this.connectedX) {
+				return false; // already connected
+			}
+			for(let xDiff = -1; xDiff > tile.x - this.x; xDiff--) { // Between the two tiles
+				if(this.world.vertexMap[this.x + xDiff] && this.world.vertexMap[this.x + xDiff][this.z]) { // Update existing
+					let testTile = this.world.vertexMap[this.x + xDiff][this.z];
+					if(testTile.connected || testTile.connectedToX) {
+						return false;
+					}
+				}
+			}
+		} else {
+			return false;
+		}
+		return true;
+	}
+	
+	connectTo(tile) {
+		if(this.canConnectTo(tile)) {
+			if(tile.x == this.x) {
+				// Updates the data
+				this.world.data[this.x][this.z].connectedZ = tile.z
+				
+				// Updates the rendered data
+				this.connectedZ = tile.z;
+				this.updateHeight(); // The update connects it
+			} else if (tile.z == this.z) {
+				// Updates the data
+				this.world.data[this.x][this.z].connectedX = tile.x
+				
+				// Updates the rendered data
+				this.connectedX = tile.x;
+				this.updateHeight(); // The update connects it
+			} else {
+				return false;
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	// updateNearby is for when changes are being
@@ -527,18 +620,30 @@ class VertexData {
 		// Creates a connecting platform in the x dir.
 		let remoteTile = this.world.vertexMap[this.connectedX][this.z];
 		if(remoteTile) {
-			remoteTile.adjacentX = this;
+			remoteTile.setRemoteX(this);
 			let xSlope = (this.topLeftY - remoteTile.topLeftY) / (this.x - this.connectedX - 1)
-				let y = this.topLeftY;
+			let y = this.topLeftY;
 			for(let xDiff = -1; xDiff > this.connectedX - this.x; xDiff--) { // Between the two tiles
 				y -= xSlope;
 				if(this.world.vertexMap[this.x + xDiff][this.z]) { // Update existing
 					let existing = this.world.vertexMap[this.x + xDiff][this.z];
 					existing.topLeftY = y;
+					existing.connected = true;
 					existing.xSlope = xSlope;
+					existing.connectedX = this.x;
 					existing.updateHeight();
+					
+					this.world.removeFromData(this.x + xDiff, this.z);
 				} else {
-					this.world.vertexMap[this.x + xDiff][this.z] = new VertexData(this.x + xDiff, this.z, this.world, xSlope, 0, y);
+					this.world.vertexMap[this.x + xDiff][this.z] = new VertexData(this.x + xDiff, this.z, this.world, xSlope, 0, true, y);
+				}
+				
+				// Refreshes the connections for the one in FRONT of
+				// it if this one has a slope, becuase that would mean
+				// that this one didn't exist when it ran this method.
+				let adjVertex = this.world.vertexMap[this.x + xDiff][this.z + 1];
+				if(adjVertex) {
+					adjVertex.updateZConnections();
 				}
 			}
 		}
@@ -550,16 +655,13 @@ class VertexData {
 		if(Zz) {
 			let adjacent = Zz[this.z];
 			let faces = this.world.geometry.faces;
-			if(adjacent && !adjacent.adjacentX) {
-				adjacent.adjacentX = this;
-			}
 
 			if (adjacent && (adjacent.topLeftY != this.topLeftY || adjacent.zSlope != this.zSlope)) {
 				if(!this.wallFace1x && !this.wallFace2x) {
 					this.wallFace1x = new THREE.Face3( adjacent.topRightIndex, adjacent.bottomRightIndex, this.topLeftIndex);
 					this.wallFace2x = new THREE.Face3( this.bottomLeftIndex, this.topLeftIndex, adjacent.bottomRightIndex);
-					this.wallFace1x.color = wallColor;
-					this.wallFace2x.color = wallColor;
+					this.wallFace1x.color = flatColor;
+					this.wallFace2x.color = flatColor;
 					faces.push(this.wallFace1x);
 					faces.push(this.wallFace2x);
 					this.world.geometry.verticesNeedUpdate = true;
@@ -590,18 +692,33 @@ class VertexData {
 		if(Zs) {
 			let remoteTile = Zs[this.connectedZ];
 			if(remoteTile) {
-				remoteTile.adjacentZ = this;
+				remoteTile.setRemoteZ(this);
+
 				let zSlope = (this.topLeftY - remoteTile.topLeftY) / (this.z - this.connectedZ - 1);
 
 				let y = this.topLeftY;
 				for(let zDiff = -1; zDiff > this.connectedZ - this.z; zDiff--) { // Between the two tiles
 					y -= zSlope;
-					if(Zs[this.z + zDiff]) { // Update existing
-						Zs[this.z + zDiff].topLeftY = y;
-						Zs[this.z + zDiff].zSlope = zSlope;
-						Zs[this.z + zDiff].updateHeight();
+					let existing = Zs[this.z + zDiff];
+					if(existing) { // Update existing
+						existing.topLeftY = y;
+						existing.connected = true;
+						existing.zSlope = zSlope;
+						existing.connectedZ = this.z;
+						existing.updateHeight();
+						this.world.removeFromData(this.x, this.z + zDiff);
 					} else {
-						Zs[this.z + zDiff] = new VertexData(this.x, this.z + zDiff, this.world, 0, zSlope, y);
+						Zs[this.z + zDiff] = new VertexData(this.x, this.z + zDiff, this.world, 0, zSlope, true, y);
+					}
+					// Refreshes the connections for the one in FRONT of
+					// it if this one has a slope, becuase that would mean
+					// that this one didn't exist when it ran this method.
+					let Zs2 = this.world.vertexMap[this.x + 1];
+					if(Zs2) {
+						let adjVertex = Zs2[this.z + zDiff];
+						if(adjVertex) {
+							adjVertex.updateXConnections();
+						}
 					}
 				}
 			}
@@ -616,18 +733,15 @@ class VertexData {
 			let faces = this.world.geometry.faces;
 			// The thing after the 'or' is to make it so that a panel on the floor
 			// that is connected to something else will have a wall as well.
-			if(adjacent && !adjacent.adjacentZ) {
-				adjacent.adjacentZ = this;
-			}
 			if (adjacent && (adjacent.topLeftY != this.topLeftY || adjacent.xSlope != this.xSlope)) {
 				if(!this.wallFace1z && !this.wallFace2z) {
 					this.wallFace1z = new THREE.Face3( this.topLeftIndex, adjacent.bottomRightIndex, adjacent.bottomLeftIndex);
 					this.wallFace2z = new THREE.Face3( adjacent.bottomRightIndex, this.topLeftIndex, this.topRightIndex);
-					this.wallFace1z.color = wallColor;
-					this.wallFace2z.color = wallColor;
+					this.wallFace1z.color = flatColor;
+					this.wallFace2z.color = flatColor;
 					faces.push(this.wallFace1z);
 					faces.push(this.wallFace2z);
-					this.world.geometry.verticesNeedUpdate = true;
+					this.world.geometry.verticesNeedUpdate = true;					
 				}
 			} else {
 				if(this.wallFace1z) {
@@ -661,23 +775,39 @@ class VertexData {
 		this.world.faceToVertexData.set(this.face1, this);
 		this.world.faceToVertexData.set(this.face2, this);
 		
-		if(this.xSlope != 0) {
-			this.color = getColor(this.xSlope);
-		} else if (this.zSlope != 0) {
-			this.color = getColor(this.zSlope);
-		} else {
-			if((this.z % 2 == 0 && this.x % 2 != 0) || (this.z % 2 != 0 && this.x % 2 == 0)) {
-				this.color = new THREE.Color(generic);
-			} else {
-				this.color = new THREE.Color(generic2);
-			}
-		}
-		let colorCopy = new THREE.Color(this.color);
-		this.face1.color = colorCopy;
-		this.face2.color = colorCopy;
+		this.updateColor();
 		
 		this.world.geometry.faces.push(this.face1);
 		this.world.geometry.faces.push(this.face2);
+	}
+	
+	updateColor() {
+		var newColor;
+		if(this.xSlope != 0) {
+			newColor = getColor(this.xSlope);
+		} else if (this.zSlope != 0) {
+			newColor = getColor(this.zSlope);
+		} else if (this.connected) {
+			newColor = flatColor;
+		} else {
+			if((this.z % 2 == 0 && this.x % 2 != 0) || (this.z % 2 != 0 && this.x % 2 == 0)) {
+				newColor = generic;
+			} else {
+				newColor = generic2;
+			}
+		}
+		if(this.color) {
+			// Update
+			this.face1.color.set(newColor);
+			this.face2.color.set(newColor);
+			this.world.mesh.geometry.colorsNeedUpdate = true;
+		} else {
+			// First time setting
+			let colorCopy = new THREE.Color(newColor);
+			this.face1.color = colorCopy;
+			this.face2.color = colorCopy;
+		}
+		this.color = newColor;
 	}
 	
 	/**
@@ -685,33 +815,44 @@ class VertexData {
 	 * the vertices then call this method for all connected angled ones.
 	 * For an angled it will read the new topLeftY and the slopes to update the vertices.
 	 *
-	 * In both cases, it will then update the wallColor.
+	 * In both cases, it will then update the flatColor.
 	 */
 	updateHeight() {
-		console.log("topLeftY: " + this.topLeftY);
-		console.log((typeof this.topLeftY) + " + " + (typeof this.xSlope) + " = " + (this.topLeftY + this.xSlope ));
-		
+		console.log("Updating height");
+
 		this.topLeft.y = this.topLeftY;
 		this.topRight.y = this.topLeftY + this.xSlope;
 		this.bottomLeft.y = this.topLeftY + this.zSlope;
 		this.bottomRight.y = this.topLeftY + (this.zSlope == 0 ? this.xSlope : this.zSlope);
-		console.log("new topRightY: " + this.topRight.y );
 		
 		this.world.mesh.geometry.verticesNeedUpdate = true;
 		this.world.physicsWorld.removeRigidBody(this.body);
 		this.addRigidBody();
 		this.updateXConnections(true);
 		this.updateZConnections(true);
-		if(this.adjacentZ) {
-			this.adjacentZ.updateZConnections();
-		}
-		if(this.adjacentX) {
-			console.log(this.adjacentX);
-			this.adjacentX.updateXConnections();
-			console.log(this.adjacentX);
-		}
+		if(!this.connected){ 
+			this.world.updateHeight(this.x, this.topLeftY, this.z);
+
+			if (this.remoteZ) {
+				this.remoteZ.updateZConnections();
+			} else {
+				let adjVertex = this.world.vertexMap[this.x][this.z + 1];
+				if(adjVertex) {
+					adjVertex.updateZConnections();
+				}
+			}
 			
-		this.world.mesh.geometry.colorsNeedUpdate = true;
+			if (this.remoteX) {
+				this.remoteX.updateXConnections();
+			} else {
+				let adjVertex = this.world.vertexMap[this.x + 1][this.z];
+				if(adjVertex) {
+					adjVertex.updateXConnections();
+				}
+			}
+		}
+
+		this.updateColor();
 		// Needed because the face element was added.
 		this.world.mesh.geometry.elementsNeedUpdate = true;
 	}
@@ -735,6 +876,9 @@ class VertexData {
 		this.bottomRight = new THREE.Vector3(this.x + 1, this.topLeftY + (this.zSlope == 0 ? this.xSlope : this.zSlope), this.z + 1);
 	}
 	
+	toString() {
+		return "(" + this.x + ", " + this.z + ")";
+	}
 }
 
 function getColor(slope) {
@@ -1997,7 +2141,7 @@ function getParentElement(element, className) {
 var visualizationManager;
 
 function VisualizationManager() {
-	var glowMaterial, glowProjectile, selectedProjectile, selectedTile;
+	var glowMaterial, glowProjectile, selectedProjectile, selectedTile, isConnectingTiles = false;
 	var initialParametersArrow, accelerationArrow, velocityArrow;
 	var initialParamsColor = 0x00ff00, accelerationColor = 0x991010, velocityColor = 0x00dcff;
 	var headLength = 0.6;
@@ -2116,34 +2260,107 @@ function VisualizationManager() {
 		document.getElementById("launch-position-z").value = Math.round(currentWorld.yawObject.position.z * 10000)/10000;
 	}
 	this.setLaunchSettingsFromCam(); // Run it.
-	
+
 	// Tile selection
 	this.selectTileUIUpdate = function(tile) {
-		this.deSelectTileUIUpdate();
-		document.getElementById("tile-edit").className = "visible";
-		document.getElementById("tile-edit-none").className = "";
-		document.getElementById("tile-id").innerText = "(" + tile.x + ", " + tile.z + ")";
-		document.getElementById("tile-type").innerText = tile.xSlope == 0 && tile.zSlope == 0 ? "Flat" : "Connecting";
-		var heightEdit = document.getElementById("height-edit");
-		if(tile.xSlope == 0 && tile.zSlope == 0) {
-			heightEdit.style.display = "block";
-			heightEdit.min = minY;
-			heightEdit.value = tile.topLeftY;
+		if(isConnectingTiles) {
+			this.initiateConnection();
+			if(selectedTile && tile && selectedTile != tile) {
+				// Set swap == true if the selected tile has a greater x/z value
+				let swap = (tile.x == selectedTile.x && selectedTile.z > tile.z
+					|| tile.z == selectedTile.z && selectedTile.x > tile.x);
+					
+				if((!swap && tile.connectTo(selectedTile)) || (swap && selectedTile.connectTo(tile))) {
+					// Valid two tiles. Already connected in the if statement.
+					this.deSelectTileUIUpdate();
+				} else {
+					alert("Invalid connection! They must both be flat tiles in the same "
+						+ "row or column (x or z) without anything in between that would conflict.");
+				}
+			} else {
+				alert("Invalid tile(s)");
+			}
 		} else {
-			heightEdit.style.display = "none";
+			this.deSelectTileUIUpdate();
+			document.getElementById("tile-info").className = "visible";
+			document.getElementById("tile-info-none").className = "";
+			document.getElementById("tile-id").innerText = tile.toString();
+			document.getElementById("tile-type").innerText =
+				!tile.connected ? "Flat" : "Connecting";
+			
+			let allConnectionInfo = document.getElementById("tile-connection-info");
+			allConnectionInfo.style.display = "block";
+
+			let heightEdit = document.getElementById("height-edit");
+			if(!tile.connected) {
+				heightEdit.style.display = "block";
+				heightEdit.firstElementChild.min = minY;
+				heightEdit.firstElementChild.value = tile.topLeftY;
+			} else {
+				heightEdit.style.display = "none";
+			}
+
+			let tileConnector = document.getElementById("tile-connector");
+			if((!tile.connectedX || !tile.connectedZ) && !tile.connected) {
+				tileConnector.style.display = "block";
+			} else {
+				tileConnector.style.display = "";
+			}
+			
+			var connectedToByX = document.getElementById("tile-connected-to-by-x");
+			if(tile.remoteX && !tile.connected) {
+				connectedToByX.style.display = "block";
+				document.getElementById("tile-connected-to-by-value-x").innerText = tile.remoteX.toString();
+			} else {
+				connectedToByX.style.display = "";
+			}
+			var connectedToByZ = document.getElementById("tile-connected-to-by-z");
+			if(tile.remoteZ && !tile.connected) {
+				connectedToByZ.style.display = "block";
+				document.getElementById("tile-connected-to-by-value-z").innerText = tile.remoteZ.toString();
+			} else {
+				connectedToByZ.style.display = "";
+			}
+			
+			var connectedToX = document.getElementById("tile-connected-to-x");
+			if(tile.connectedX && !tile.connected) {
+				document.getElementById("tile-connected-to-value-x").innerText = "(" + tile.connectedX + ", " + tile.z + ")";
+				connectedToX.style.display = "block";
+			} else {
+				connectedToX.style.display = "";
+			}
+			var connectedToZ = document.getElementById("tile-connected-to-z");
+			if(tile.connectedZ && !tile.connected) {
+				document.getElementById("tile-connected-to-value-z").innerText = "(" + tile.x + ", " + tile.connectedZ + ")";
+				connectedToZ.style.display = "block";
+			} else {
+				connectedToZ.style.display = "";
+			}			
+			selectedTile = tile;
+			selectedTile.setSelected(true);
 		}
-		
-		selectedTile = tile;
-		selectedTile.setSelected(true);
 	}
 	
 	this.deSelectTileUIUpdate = function() {
-		document.getElementById("tile-edit").className = "";
-		document.getElementById("tile-edit-none").className = "visible";
+		document.getElementById("tile-info").className = "";
+		document.getElementById("tile-info-none").className = "visible";
 		if(selectedTile) {
 			console.log(selectedTile.x + ", " + selectedTile.z);
 			selectedTile.setSelected(false);
 			selectedTile = undefined;
+		}
+		
+		let allConnectionInfo = document.getElementById("tile-connection-info");
+		allConnectionInfo.style.display = "";
+	}
+	
+	this.initiateConnection = function() {
+		isConnectingTiles = !isConnectingTiles;
+		let button = document.getElementById("connection-selector")
+		if(isConnectingTiles) {
+			button.innerText = "Click on a valid tile!";
+		} else {
+			button.innerText = "Select Tile";
 		}
 	}
 	
