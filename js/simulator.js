@@ -112,6 +112,7 @@ function animateThree() {
 		
 		if(elapsed * timeRate !== 0) {
 			currentWorld.physicsWorld.stepSimulation( (elapsed * timeRate), 10 );
+			//console.log("Collisions: " + currentWorld.physicsWorld.getNumCollisionObjects());
 		
 			// The actual physics update.
 			var length = currentWorld.projectiles.length;
@@ -143,24 +144,6 @@ function animateThree() {
 			currentWorld.pitchObject.rotation.x += pitchRate * elapsed;
 
 			currentWorld.pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, currentWorld.pitchObject.rotation.x ) );
-		}
-		
-		if(lookAtSelected && selectedProjectile) {
-			// Makes the object slowly go towards the ball when too far
-			var distance = currentWorld.yawObject.position.distanceTo(selectedProjectile.getPosition());
-			var percentageSlowed = 1.6;
-			if(distance > maxDistance) {
-				var selectedVelocity = selectedProjectile.getVelocity();
-				var lineBetween = selectedProjectile.getPosition().clone().sub(currentWorld.yawObject.position).normalize();
-				
-				var factor = Math.max(selectedVelocity.dot(lineBetween.clone().normalize()), 0.1);
-				
-				if(distance < maxDistance * percentageSlowed) {
-					factor*= ((distance - maxDistance) * percentageSlowed * 2 / maxDistance);
-				}
-
-				currentWorld.yawObject.position.add(lineBetween.multiplyScalar(factor * elapsed * timeRate));
-			}
 		}
 
 		updateControls(elapsed);
@@ -410,7 +393,7 @@ class World {
 		var motionState = new Ammo.btDefaultMotionState( transform );
 		var rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, shape, localInertia, 0, 0, 0, 0, 1 );
 		var body = new Ammo.btRigidBody( rbInfo );
-		body.setRestitution(0);
+		body.setRestitution(1);
 
 		this.physicsWorld.addRigidBody(body);
 	}
@@ -526,7 +509,7 @@ class VertexData {
 		var motionState = new Ammo.btDefaultMotionState( transform );
 		var rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, this.shape, localInertia, 0, 0, 0, 0, 1 );
 		this.body = new Ammo.btRigidBody( rbInfo );
-		this.body.setRestitution(0.98);
+		this.body.setRestitution(1);
 
 		this.world.physicsWorld.addRigidBody(this.body);
 
@@ -1597,14 +1580,17 @@ function vectorToString(vector) {
 	return "(" + (Math.round( vector.x * 10) / 10).toFixed(1) + ", " + (Math.round( vector.y * 10) / 10).toFixed(1) + ", " + (Math.round( vector.z * 10) / 10).toFixed(1) + ")";
 }
 
+var textureLoader = new THREE.TextureLoader();
+var rockTexture = textureLoader.load( 'textures/groundgrassrootsseamless_spec.jpg' );
 
-function Projectile(initialPosition, initialVelocity, mass, radius, time) {
+
+function Projectile(initialPosition, initialVelocity, mass, radius, time, resistation, friction, linearDamping) {
 	console.log("Created sphere with radius " + radius + " and initial time " + time);
 	
 	
 	// THREE.js
 	this.geometry = new THREE.SphereGeometry( radius, 20, 20);
-	this.material = new THREE.MeshPhongMaterial( {color: Math.floor(Math.random()*16777215), wireframe: false, transparent: true} );
+	this.material = new THREE.MeshPhongMaterial( {color: Math.floor(Math.random()*16777215), wireframe: false, transparent: true, map: rockTexture} );
 	this.mesh = new THREE.Mesh( this.geometry, this.material);
 	
 	currentWorld.projectilesByID[this.mesh.uuid] = this;
@@ -1626,14 +1612,14 @@ function Projectile(initialPosition, initialVelocity, mass, radius, time) {
 	var pos = this.mesh.position;
 	transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
 	var motionState = new Ammo.btDefaultMotionState( transform );
-	var rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, shape, localInertia, 0, 0, 0, 0, 1);
+	var rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, shape, localInertia, linearDamping, 0, friction, 0, resistation);
 	var body = new Ammo.btRigidBody( rbInfo );
 	body.setLinearVelocity(new Ammo.btVector3( initialVelocity.x, initialVelocity.y, initialVelocity.z ));
 	this.physicsBody = body;
 	currentWorld.physicsWorld.addRigidBody( body );
 	body.setCcdMotionThreshold(0.01)
 	body.setCcdSweptSphereRadius(radius)		
-	body.setRestitution(1);
+	body.setRestitution(resistation);
 	// FINAL/CURRENT variables
 	// Updated as often as needed.
 	var position = this.mesh.position; // Update every tick
@@ -2226,8 +2212,12 @@ function VisualizationManager() {
 		initialPosition.y = parseFloat(document.getElementById("launch-position-y").value);
 		initialPosition.z = parseFloat(document.getElementById("launch-position-z").value);
 		var radius = parseFloat(document.getElementById("launch-radius").value);
+		var mass = parseFloat(document.getElementById("launch-mass").value);
+		var friction = parseFloat(document.getElementById("launch-friction").value);
+		var elasticity = parseFloat(document.getElementById("launch-elasticity").value);
+		var resistAir = document.getElementById("launch-resist-air").checked;
 
-		var projectile = new Projectile(initialPosition, initialVelocity, 1, radius, time);
+		var projectile = new Projectile(initialPosition, initialVelocity, mass, radius, time, elasticity, friction, resistAir ? 0.4 : 0);
 		
 		if(visualizationManager !== null) {
 			visualizationManager.selectProjectile(projectile);

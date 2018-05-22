@@ -164,9 +164,13 @@
 								<input type="number" id="launch-position-y" placeholder="y">
 								<input type="number" id="launch-position-z" placeholder="z">
 								<br>
-								Radius <i>(m)</i>
+								Radius <i>(m)</i>, Mass<i>(kg)</i>, Elasticity<i>(0-1)</i>, Friction<i>(m)</i>, Resist Air
 								<br>
-								<input id="launch-radius" placeholder="radius" value="0.1">								
+								<input type="number" id="launch-radius" placeholder="radius" value="0.1" min="0.01">								
+								<input type="number" id="launch-mass" placeholder="radius" value="1" min="0.01">								
+								<input type="number" id="launch-elasticity" placeholder="elasticity" value="1" min="0" max="1">
+								<input type="number" id="launch-friction" placeholder="friction" value="0" min="0" max="1">
+								<input type="checkbox" id="launch-resist-air" >
 								<button type="button" onclick="visualizationManager.launchProjectile()">Launch</button>
 								<button type="button" onclick="visualizationManager.setLaunchSettingsFromCam()">From Camera</button>
 							</div>
