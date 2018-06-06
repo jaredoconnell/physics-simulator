@@ -113,7 +113,9 @@ function animateThree() {
 		if(elapsed * timeRate !== 0) {
 			currentWorld.physicsWorld.stepSimulation( (elapsed * timeRate), 10 );
 			//console.log("Collisions: " + currentWorld.physicsWorld.getNumCollisionObjects());
-		
+			
+			updateCollisions();
+			
 			// The actual physics update.
 			var length = currentWorld.projectiles.length;
 			for(var i = 0; i < length; i++) {
@@ -165,6 +167,45 @@ function animateThree() {
 	}
 }
 
+function updateCollisions() {
+	if(currentWorld.pauseOnCollision) {
+		var i, offset,
+			dp = currentWorld.physicsWorld.getDispatcher(),
+			num = dp.getNumManifolds(),
+			manifold, num_contacts, j, pt,
+			_collided = false;
+
+		//collisionreport[1] = 0; // how many collisions we're reporting on
+
+		for ( i = 0; i < num; i++ ) {
+			manifold = dp.getManifoldByIndexInternal( i );
+
+			num_contacts = manifold.getNumContacts();
+			if ( num_contacts === 0 ) {
+				continue;
+			}
+
+			for ( j = 0; j < num_contacts; j++ ) {
+				pt = manifold.getContactPoint( j );
+				//if ( pt.getDistance() < 0 ) {
+					//offset = 2 + (collisionreport[1]++) * COLLISIONREPORT_ITEMSIZE;
+					//collisionreport[ offset ] = _objects_ammo[ manifold.getBody0() ];
+					//collisionreport[ offset + 1 ] = _objects_ammo[ manifold.getBody1() ];
+
+					var _vector = pt.get_m_normalWorldOnB();
+					//collisionreport[ offset + 2 ] = _vector.x();
+					//collisionreport[ offset + 3 ] = _vector.y();
+					//collisionreport[ offset + 4 ] = _vector.z();
+					console.log("Collision: ");
+					console.log(_vector);
+					timeRate = 0;
+					break;
+				//}
+			}
+		}
+	}
+}
+
 function sortNumber(a,b) {
     return a - b;
 }
@@ -179,6 +220,8 @@ class World {
 		this.projectiles = [];
 		this.projectilesByID = {};
 		this.faceToVertexData = new Map();
+		this.pauseOnCollision = false;
+		this.pauseAtPeak = false;
 		
 		// Creates or reads the basic outline of the currentWorld ground
 		if(oldJSON && oldJSON != "") {
@@ -208,7 +251,7 @@ class World {
 		}
 		this.createPhysicsWorld();
 		this.initializeOctrees();
-		this.addMinBoundry();
+		//this.addMinBoundry();
 		this.renderVertices();
 		this.createScene();
 		this.initializeCamera();
@@ -938,10 +981,10 @@ function toggleTime() {
 }
 
 function slowTimeToggle() {
-	if(timeRate == 1 || timeRate < 0) {
+	if(timeRate == 1) {
 		timeRate = 0.1;
 	} else {
-		timeRate = -0.1;
+		timeRate = 1;
 	}
 }
 
@@ -1674,7 +1717,10 @@ function Projectile(initialPosition, initialVelocity, mass, radius, time, resist
 			var q = currentWorld.transformAux1.getRotation();		
 			this.mesh.position.set( p.x(), p.y(), p.z() );		
 			this.mesh.quaternion.set( q.x(), q.y(), q.z(), q.w() );		
-			var ammoVelocity = this.physicsBody.getLinearVelocity();		
+			var ammoVelocity = this.physicsBody.getLinearVelocity();
+			if(this.pauseAtPeak && (Math.sign(velocity.x) !== Math.sign(ammoVelocity.x()) || Math.sign(velocity.z) !== Math.sign(ammoVelocity.z()) || Math.sign(velocity.y) !== Math.sign(ammoVelocity.y()))) {
+				timeRate = 0;
+			}
 			velocity.set(ammoVelocity.x(), ammoVelocity.y(), ammoVelocity.z());		
 		}
 	}
@@ -2218,6 +2264,7 @@ function VisualizationManager() {
 		var resistAir = document.getElementById("launch-resist-air").checked;
 
 		var projectile = new Projectile(initialPosition, initialVelocity, mass, radius, time, elasticity, friction, resistAir ? 0.4 : 0);
+		projectile.pauseAtPeak =  document.getElementById("pause-at-peak-toggle").checked;
 		
 		if(visualizationManager !== null) {
 			visualizationManager.selectProjectile(projectile);
@@ -2254,9 +2301,11 @@ function VisualizationManager() {
 			document.getElementById("position-value").innerHTML = vectorToString(selectedProjectile.getPosition());
 			document.getElementById("initial-position-value").innerHTML = vectorToString(selectedProjectile.getInitialPosition());
 			document.getElementById("velocity-value").innerHTML = vectorToString(selectedProjectile.getVelocity());
+			document.getElementById("initial-position-dist-value").innerHTML = Math.round(1000 * selectedProjectile.getInitialPosition().clone().sub(selectedProjectile.getPosition()).length()) / 1000;
+		
 			document.getElementById("initial-velocity-value").innerHTML = vectorToString(selectedProjectile.getInitialVelocity());
-			document.getElementById("acceleration-value").innerHTML = vectorToString(selectedProjectile.getAcceleration());
-			document.getElementById("delta-time-value").innerHTML = (Math.round( (time - selectedProjectile.getInitialTime()) * 1000) / 1000).toFixed(3);
+			/*document.getElementById("acceleration-value").innerHTML = vectorToString(selectedProjectile.getAcceleration());*/
+		/*	document.getElementById("delta-time-value").innerHTML = (Math.round( (time - selectedProjectile.getInitialTime()) * 1000) / 1000).toFixed(3);*/
 		}
 		
 		document.getElementById("camera-position-value").innerHTML = vectorToString(currentWorld.yawObject.position);

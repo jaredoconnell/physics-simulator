@@ -125,6 +125,11 @@
 									<div class="render-latex">m</div>
 								</div>
 								<br>
+								<div>Dist from start=
+									<div id="initial-position-dist-value"></div>
+									<div class="render-latex">m</div>
+								</div>
+								<br>
 								<div>Velocity =
 									<div id="velocity-value"></div>
 									<div class="render-latex">m/s</div>
@@ -135,14 +140,14 @@
 									<div class="render-latex">m/s</div>
 								</div>
 								<br>
-								<div>Acceleration =
+								<!--<div>Acceleration =
 									<div id="acceleration-value"></div>
 									<div class="render-latex">m/s^{2}</div>
 								</div>
-								<br>
-								<div>Change in Time =
-									<div id="delta-time-value"></div>
-									<div class="render-latex">s</div>
+								<br>-->
+								<div>
+									<label for="pause-at-peak-toggle-current">Pause at peak:</label>
+									<input id="pause-at-peak-toggle-current" type="checkbox" onchange="visualizationManager.getSelectedProjectile().pauseAtPeak = this.checked;">
 								</div>
 							</div>
 							<div id="projectile-launcher" class="visible">
@@ -164,13 +169,15 @@
 								<input type="number" id="launch-position-y" placeholder="y">
 								<input type="number" id="launch-position-z" placeholder="z">
 								<br>
-								Radius <i>(m)</i>, Mass<i>(kg)</i>, Elasticity<i>(0-1)</i>, Friction<i>(m)</i>, Resist Air
+								Radius <i>(m)</i>, Mass<i>(kg)</i>, Elasticity<i>(0-1)</i>, Friction<i>(m)</i>, Resist Air, Pause On Peak
 								<br>
 								<input type="number" id="launch-radius" placeholder="radius" value="0.1" min="0.01">								
 								<input type="number" id="launch-mass" placeholder="radius" value="1" min="0.01">								
 								<input type="number" id="launch-elasticity" placeholder="elasticity" value="1" min="0" max="1">
 								<input type="number" id="launch-friction" placeholder="friction" value="0" min="0" max="1">
 								<input type="checkbox" id="launch-resist-air" >
+								<label for="pause-at-peak-toggle">Pause at peak:</label>
+								<input id="pause-at-peak-toggle" type="checkbox">
 								<button type="button" onclick="visualizationManager.launchProjectile()">Launch</button>
 								<button type="button" onclick="visualizationManager.setLaunchSettingsFromCam()">From Camera</button>
 							</div>
@@ -180,32 +187,11 @@
 							<h3 style="display: inline-block">Time Controls</h3>
 							<br>
 							<button type="button" onclick="toggleTime()">Pause/Play</button>
-							<button type="button" onclick="slowTimeToggle()">Slow/Inverse</button>
+							<button type="button" onclick="slowTimeToggle()">Slow</button>
+							<label for="pause-on-collision-toggle">Pause on collision:</label>
+							<input id="pause-on-collision-toggle" type="checkbox" onchange="currentWorld.pauseOnCollision = this.checked;">
 						</div>
 						
-						<div class="panel-section">
-							<h3 style="display: inline-block">Global Equations</h3>
-							
-							<div onclick="var style = getElementById('notation').style; style.display = (style.display === 'none' ? 'block' : 'none')">
-								<h3 style="display: inline-block">Notation</h3>
-							</div>
-							<div id="notation" style="display: none;" class="spoiler">
-								<span class="katex">t = Δ(change in) time</span>
-								<br>
-								<span class="katex">r = Initial position</span>
-								<br>
-								<span class="katex">v = Initial velocity</span>
-								<br>
-								<span class="katex">a = Constant acceleration</span>
-							</div>
-							<br>
-							<h4>Position equation:</h4>
-							<div id="position-equation"></div>
-							<input id="position-equation-editor" rows="1" cols="32" onkeydown="if (event.keyCode == 13) setPositionEquation(document.getElementById('position-equation-editor').value);">
-							<button type="button" onclick="setPositionEquation(document.getElementById('position-equation-editor').value)">Set</button>
-							<h4>Velocity equation:</h4>
-							<div id="velocity-equation"></div>
-						</div>
 					</div>
 					<div class="tab">
 						<h1>World</h1>
