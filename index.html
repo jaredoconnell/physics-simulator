@@ -169,15 +169,28 @@
 								<input type="number" id="launch-position-y" placeholder="y">
 								<input type="number" id="launch-position-z" placeholder="z">
 								<br>
-								Radius <i>(m)</i>, Mass<i>(kg)</i>, Elasticity<i>(0-1)</i>, Friction<i>(m)</i>, Resist Air, Pause On Peak
 								<br>
-								<input type="number" id="launch-radius" placeholder="radius" value="0.1" min="0.01">								
-								<input type="number" id="launch-mass" placeholder="radius" value="1" min="0.01">								
-								<input type="number" id="launch-elasticity" placeholder="elasticity" value="1" min="0" max="1">
+								<div>
+									Radius <i>(m)</i>
+									<input type="number" id="launch-radius" placeholder="radius" value="0.1" min="0.01">
+								</div>
+								<div>
+									Mass<i>(kg)</i>
+									<input type="number" id="launch-mass" placeholder="mass" value="1" min="0.01">
+								</div>
+								<div>
+									Elasticity<i>(0-1)</i>
+									<input type="number" id="launch-elasticity" placeholder="elasticity" value="1" min="0" max="1">
+								</div>
+								<br>
+								Friction<i>(m)</i>
 								<input type="number" id="launch-friction" placeholder="friction" value="0" min="0" max="1">
+								<label for="launch-resist-air">Resist Air:</label>
 								<input type="checkbox" id="launch-resist-air" >
+								<br>
 								<label for="pause-at-peak-toggle">Pause at peak:</label>
 								<input id="pause-at-peak-toggle" type="checkbox">
+								
 								<button type="button" onclick="visualizationManager.launchProjectile()">Launch</button>
 								<button type="button" onclick="visualizationManager.setLaunchSettingsFromCam()">From Camera</button>
 							</div>

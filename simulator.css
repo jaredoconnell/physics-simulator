@@ -130,7 +130,7 @@ hr {
 	display: none;
 }
 
-#projectile-launcher input {
+#projectile-launcher > input[type=number] {
 	width: calc(33% - 2vh);
 	display: inline-block;
 }
